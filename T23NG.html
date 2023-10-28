@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+<title>T23NG Graphical display</title>    
+<link rel="stylesheet" type="text/css" href="T23NG.css">
+</head>
+<body onclick="mseclickcoords(event)" onwheel="wheelscrolling(event)">
+<p>
+<div class="metrics" id="servertimestamp" style="font-weight:bold;font-size:20px">Server time 00:00:00</div>      
+</p>
+<p>Click the button to open an about:blank page in a new browser window that is 200px wide and 100px tall.
+<button onclick="Itemdetail()">Try it</button>
+</p>
+
+<div style="position:absolute;top:12px; left:1260px; z-index:1">
+      <canvas id="clock" width="200" height="200">
+        Fehlermeldung       
+      </canvas>
+    </div>   
+<p>
+<input type="checkbox" name="Srceflag" id="Srceflagcheck" value="SrceON"> Display source data message<br>
+</p>
+<p>
+<div id="SourcelineHdr">
+Source data received :  
+</div>
+</p>
+
+<p>
+<div id="Sourceline">
+.....  
+</div>
+</p>
+
+<script>
+function Itemdetail() {
+  var myWindow = window.open("", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
+}
+</script>	
+</p>	
+	<canvas id="maincanvas" style="position:absolute; top:400px; left:15px; z-index:1; background-color: rgb(255,247,230); outline: 3px double #1C6EA4;  
+	outline-offset: 2px"></canvas>	
+
+<script src="T23NG.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="LNwebjqueryfunctions.js"></script>
+<script type="text/javascript" src="station-clock.js"></script>
+      <script type="text/javascript">
+
+      var clock = new StationClock("clock");
+      clock.body = StationClock.RoundBody;
+      clock.dial = StationClock.SwissStrokeDial;
+      clock.hourHand = StationClock.SwissHourHand;
+      clock.minuteHand = StationClock.SwissMinuteHand;
+      clock.secondHand = StationClock.SwissSecondHand;
+      clock.boss = StationClock.NoBoss;
+      clock.minuteHandBehavoir = StationClock.BouncingMinuteHand;
+      clock.secondHandBehavoir = StationClock.OverhastySecondHand;
+      console.log("\nLoading clock script");
+
+      animate();
+
+      function animate() {
+        clock.draw();
+        window.setTimeout("animate()", 50);
+      }
+
+    </script>
+
+</body>
+</html>

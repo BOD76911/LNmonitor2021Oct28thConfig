@@ -1,0 +1,61 @@
+/**************************************************
+/	LNRFidconfig.dat 
+/
+/	Updated July 2021
+/
+/   Updated August 2022 - to load details of all vehicles (railcars and locomotives) on the system and layout
+/
+/**************************************************
+/   rec number 			001;
+/   vehicle number 		010;
+/   type            	W;
+/   RF id tag       	00000000000000;
+/   last recorded dev 	0000;
+/
+/	001;010;1;00000000000000;0000; 
+/*  Header format  
+/*
+/*	0	00	type - header
+/*	1	00 fields on the header
+/*	2	00 field 1 - start position 
+/*	3	00 field 1 - length 
+/* 	4  00 field 1 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	5	00 field 2 - start position 
+/*	6	00 field 2 - length 
+/*	7  00 field 2 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	8	00 field 3 - start position 
+/*	9	00 field 3 - length 
+/* 10 	00 field 3 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	11	00 field 4 - start position 
+/*	12	00 field 4 - length 
+/* 	13 00 field 4 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	Position 	length 	X 			end of file indicator
+/*
+/*	1		  	000		int Record number in file 
+/*	4			000		int RailCar record number  
+/*  8			0		int RailCar record type 
+/*	10			000000000000				12 characters   //  RFid code of RFid tag - 12 digit code 
+/*  23          0000	int Car id number   
+/*	28			0000000000000000000000000	25 characters - text of Railcar description  
+/*	54          00000	Spare field 1
+/*  59          00000	Spare field 2
+/*	64			00000	Spare field 3
+/*
+000;08;04;003;01;08;001;01;10;012;02;23;004;01;28;025;02;54;04;01;59;004;01;64;04;01;
+/*        1         2         3         4         5         6         7         8         9
+/*23456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+/
+001;010;1;66006C3D5999;0101;Test vehicle 1           ;0000;0000;0000;
+001;011;1;0005E6A01053;0102;Riechelbrau car          ;0000;0000;0000;
+001;014;1;00782B1BCB83;0105;ARAL small tank car      ;0000;0000;0000;   
+001;015;1;66006BF829DC;0901;test vehicle 7           ;0000;0000;0000;
+001;016;1;66006C3D586F;0902;test vehicle 2           ;0000;0000;0000;
+001;017;1;000000000000;0903;test vehicle 3           ;0000;0000;0000;
+001;018;1;000000000000;0904;test vehicle 4           ;0000;0000;0000;
+001;019;1;000000000000;0905;test vehicle 5           ;0000;0000;0000;
+001;020;1;000000000000;0906;test vehicle 6           ;0000;0000;0000;
+X:X

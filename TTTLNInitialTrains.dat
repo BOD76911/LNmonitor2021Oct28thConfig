@@ -1,0 +1,69 @@
+/***********************************************************************
+/*
+/*		LNInitialTrains.dat
+/*
+/*		File for initial load of Train data 
+/*
+/***********************************************************************
+/*
+/*
+/*
+/*
+/*
+/*  Header format  
+/*
+/*	0	00	type - header
+/*	1	00 fields on the header
+/*	2	00 field 1 - start position 
+/*	3	00 field 1 - length 
+/* 4  00 field 1 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	5	00 field 2 - start position 
+/*	6	00 field 2 - length 
+/* 7  00 field 2 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	8	00 field 3 - start position 
+/*	9	00 field 3 - length 
+/* 10 00 field 3 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	11	00 field 4 - start position 
+/*	12	00 field 4 - length 
+/* 13 00 field 4 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	Position 	length 	X 			end of file indicator
+/*  --------    ------              --------------------
+/*	1		  	000		int Record number in file 
+/*	4			000		int Train record number  
+/*	8			0000	int Train ID 
+/*  13			0		int Train record type 
+/*	15			00		int Actual number of railcars on train/*  
+/*  18 			000		int Initial LS location
+/*	22			000     int Car1
+/*  26          000     int Car2  
+/*	30          000		int Car3
+/*  34          000		int Car4
+/*	38			000		int Car5
+/*  42	        000     int Car6  
+/*	46          000		int Car7
+/*  50          000		int Car8
+/*	54			000		int Car9
+/*  58          000     int Car10  
+/*	62          000		int Car11
+/*  66          000		int Car12
+/*	70			000		int Car13
+/*  74          000     int Car14  
+/*	78          000		int Car15
+/*  82          000		int Car16
+/*
+000;23;04;003;01;08;004;01;13;001;01;15;002;01;18;003;01;22;003;01;26;003;01;30;003;01;34;003;01;38;003;01;42;003;01;46;003;01;50;003;01;54;003;01;58;003;01;62;003;01;66;003;01;70;003;01;74;003;01;78;003;01;82;003;01;
+/*        1         2         3         4         5         6         7         8         9
+/*23456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+/
+/001;001;0001;1;16;019;401;402;403;404;504;604;704;804;904;104;105;106;107;108;109;110;
+/001;002;0008;1;08;046;301;302;303;304;305;306;307;308;000;000;000;000;000;000;000;000;
+
+001;001;0212;3;00;019;019;000;000;000;000;000;000;000;000;000;000;000;000;000;000;000;
+001;002;0120;3;00;018;018;000;000;000;000;000;000;000;000;000;000;000;000;000;000;000;
+
+/001;004;0101;3;00;048;000;000;000;000;000;000;000;000;000;000;000;000;000;000;000;000;
+X:X

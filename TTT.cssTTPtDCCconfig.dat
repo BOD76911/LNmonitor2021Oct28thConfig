@@ -1,0 +1,53 @@
+/*****************************************
+/
+/	LNpointsDCCcodes.dat - file of Loconet DCC codes
+/	to switch physical points points 
+/
+/*****************************************
+/
+/  Record number 		000
+/  Point number   	 	000
+/  Direction  			C = closed
+/         			    P = Open 
+/
+/  Hex code		00 00 00 00 
+/
+/ P ; T ; Hex code;
+/
+/ X - end of file 
+/*
+/*  Header format  
+/*
+/*	0	00	type - header
+/*	1	00 fields on the header
+/*	2	00 field 1 - start position 
+/*	3	00 field 1 - length 
+/* 4  00 field 1 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	5	00 field 2 - start position 
+/*	6	00 field 2 - length 
+/* 7  00 field 2 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	8	00 field 3 - start position 
+/*	9	00 field 3 - length 
+/* 10 00 field 3 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	11	00 field 4 - start position 
+/*	12	00 field 4 - length 
+/* 13 00 field 4 - type     1 - numeric - store in integer , 2 character 
+/*
+/*		X 			end of file indicator
+/*
+/*  1  2   3  4  5   6  7  8   9 10 11 12 13
+000;03;04;003;01;08;001;02;10;011;2;
+/*-------------------------------------------------------------
+/*       1         2         3         4         5         6
+/*23456789012345678901234567890123456789012345678901234567890
+/ 
+001;001;C;B0 00 30 7F;
+001;001;P;B0 00 10 5F;
+001;002;C;B0 01 30 7E;
+001;002;P;B0 01 10 5E;
+001;003;C;B0 17 10 48;
+001;003;P;B0 17 10 48;
+X;X 

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<! Draws canvases used to display track sections      -->
+<!              T23 test track         September 2023 -->
+
+<html>	
+  <head>
+    <meta charset="utf-8"/>
+    <title>T23 Graphical display</title>    
+  <link rel="stylesheet" type="text/css" href="T23.css">
+  </head>
+  <body class="mainpage" onload="drawGUI();">  
+	  
+  <h2 style="position:relative;top:1px; left:5px; z-index:1" class="maintitle"> Track 2023 - September 2023 T23.html:</h2>		
+	
+	<div style="position:absolute;top:12px; left:1160px; z-index:1">
+      <canvas id="clock" width="200" height="200">
+        Fehlermeldung       
+      </canvas>
+    </div>   
+	  
+    <div id='MC1' style="position:absolute; top:0375px; left:15px; z-index:1">  
+        <canvas class="MC1canvas" id='canvas1'>
+              Your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
+    
+    <div class="serverTS">Server Timestamp:</div>
+ <div id="servertimestamp">
+ Server Time : #1   
+ </div>  
+ <div>
+ <input type="checkbox" name="Srceflag" id="Srceflagcheck" value="SrceON"> Display source data message<br>
+ 
+  <input type="checkbox" name="PSflag" id="PSdataflagcheck" value="PsDisplayON"> Display Physical section numbers<br> 
+ 
+ 
+  <input type="checkbox" name="Locodataflag" id="Locodataflagcheck" value="LocodatDisplayON"> Display section Loco codes<br> 
+ 
+ 
+  <input type="checkbox" name="LSsectionsdataflag" id="LSsectionsdataflagcheck" value="LSsectiondataDisplayON"> Display Logical section codes<br> 
+ 
+ 
+  <input type="checkbox" name="Signaldataflag" id="Signaldataflagcheck" value="SignaldatDisplayON"> Display signal number<br> 
+ 
+ 
+  <input type="checkbox" name="Dsectiondataflag" id="Dsectiondataflagcheck" value="DsectiondatDisplayON"> Display GUI section number<br> 
+ 
+ <button onclick="myStopFunction()">Stop auto refresh</button>
+ <button onclick="myStartFunction()">Start auto refresh</button> 
+ <button onclick="ResizeFunction()">Resize</button> 
+ </div>   
+
+<p id="Sourceline" style="position:absolute; top:375px; left:15px; z-index:1" ></p>
+
+<script src="T23.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="LNwebjqueryfunctions.js"></script>
+<script type="text/javascript" src="station-clock.js"></script>
+      <script type="text/javascript">
+
+      var clock = new StationClock("clock");
+      clock.body = StationClock.RoundBody;
+      clock.dial = StationClock.SwissStrokeDial;
+      clock.hourHand = StationClock.SwissHourHand;
+      clock.minuteHand = StationClock.SwissMinuteHand;
+      clock.secondHand = StationClock.SwissSecondHand;
+      clock.boss = StationClock.NoBoss;
+      clock.minuteHandBehavoir = StationClock.BouncingMinuteHand;
+      clock.secondHandBehavoir = StationClock.OverhastySecondHand;
+      console.log("\nLoading clock script");
+
+      animate();
+
+      function animate() {
+        clock.draw();
+        window.setTimeout("animate()", 50);
+      }
+
+    </script>
+
+</body>
+</html>

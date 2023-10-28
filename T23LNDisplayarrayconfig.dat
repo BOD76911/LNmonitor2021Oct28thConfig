@@ -1,0 +1,115 @@
+/**********************************************************/
+/*  DisplayArray config file                              */
+/*		                                                  */
+/*   File NTTLNDisplayarrayconfig.dat                        */ 
+/*                                  					  */
+/*	 Stores static data used in graphical layout display  */
+/**********************************************************/
+/*
+/*
+/*  Header format  
+/*
+/*	0	00	type - header
+/*	1	00 fields on the header
+/*	2	00 field 1 - start position 
+/*	3	00 field 1 - length 
+/* 4  00 field 1 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	5	00 field 2 - start position 
+/*	6	00 field 2 - length 
+/* 7  00 field 2 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	8	00 field 3 - start position 
+/*	9	00 field 3 - length 
+/* 10 00 field 3 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	11	00 field 4 - start position 
+/*	12	00 field 4 - length 
+/* 13 00 field 4 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	Position 	length 	X 			end of file indicator
+/*
+/*	1		  	000		int Record type 
+/*	4			000		int Record number 
+/*  8			0000	int Display section number
+/*	13			0000	int Stx;		// Section X coordinate - as a percentage of total canvas width - to 2 places 
+/*	18			0000	int Sty;        // Section Y coordinate - as a percentage of total canvas height 
+/*	23			000		int PSection;   // Physical section for Displayed section
+/*	27			0		int Sectype;    // Section type - Types : 1 = vertical straight, 2 = horizontal straight, 3 = curve
+/*  29			000		int Startangle; // Start angle for curves or rotation angle for sections that are rotated
+/*	33			000		int Finishangle; // Finish angle for curves 
+/*	37			0000	int Radius;		// radius for curves or section length
+/*	42			0		int Direction;	// direction of curves
+/*	44			00		int Height;		// height of sections displayed
+/*	47			0		int Ptype;		// point type -->  1 = Facing left , 2 = Facing right, 3 = Trailing left, 4 = Trailing right, 5 = Crossoverpoints (facing left), 6 = Crossoverpoint (facing right)
+/*	49			000		int Dwidth;		// display width of section
+/*	53			000		int Pointladdercount // Number of legs on point
+/*	57			0000	int Pointnumber;// Point number mapped to physical point 
+/*	62			0000	int Spare2;		// spare slot 2
+/*	67			0000	int MDectnum1;	// magnetic detector number 1
+/*	72			0000	int LSection1;	// Logical section 1
+/*	77			0000	int LSection2;	// Logical section 2
+/*	82			0000	int LSection3;	// Logical section 3
+/*	87			0000	int LSection4;	// Logical section 4
+/*	92			0000	int LSection5;	// Logical section 5
+/*	97			0000	int LSection6;	// Logical section 6
+/*	102			0000	int LSection7;	// Logical section 7
+/*	107			0000	int LSection8;	// Logical section 8
+/*  112			0000    int MDectnum2;	// magnetic detector number 2
+/*  117			0000    int MDectnum3;	// magnetic detector number 3
+/*  122 		0000    int MDectnum4;	// magnetic detector number 4
+/*  127         0000    int Uncoupler1  // Uncoupling Ramp 1
+/*  132         0000    int Uncoupler2  // Uncoupling Ramp 2
+/*  137          000    int Textpositionflag // positioning of Train codes text 
+/*  141			 000	int Signalnumber // signal number on GUI
+/*  145            0	int Signalposition  //  1->Start of section, 2-> mid of section,3- end of section 
+/*  147          000	int SignalpositionArcangle;
+/*  151			   0	int Signaltype;  // 1 - Single, 2 - double 
+/*  153			   0	int Signal1numberofaspects 2,3 or 4
+/*  155		       0 	int Signal2numberofaspects
+/*  157			 000	int SignalPhysicalsection // physical section covered by the signal
+/*  161         0000	int Signalsparefield1
+/*  166         0000	int Signalsparefield2
+/*  171         0000	int Signalsparefield3
+/*  176			0000	int Signalsparefield4
+/*  181			0000	int Configsparefield1
+/*  186			0000	int Configsparefield2
+/*  191			0000	int Configsparefield3
+/*  196			0000	int Configsparefield4;
+/*
+/*
+/*
+/*  New format - October 2023 --------------------------------------------
+/*
+/*   xposoffset,yposoffset,arcradius,objectID,startangle,endangle,Tsectiontype,Tcolor
+/*
+/*
+000;46;04;003;01;08;004;01;13;004;01;18;004;01;23;003;01;27;01;01;29;003;01;33;03;01;37;004;01;42;01;1;44;02;01;47;01;01;49;03;01;53;03;01;57;04;01;62;04;01;67;04;01;72;04;01;77;04;01;82;04;01;87;04;01;92;04;01;97;04;01;102;04;01;107;04;01;112;04;01;117;04;01;122;04;01;127;04;01;132;04;01;137;03;01;141;03;01;145;01;01;147;03;01;151;01;01;153;01;01;155;01;01;157;03;01;161;04;01;166;04;01;171;04;01;176;04;01;181;04;01;186;04;01;191;04;01;196;04;01
+/*        1         2         3         4         5         6         7         8         9         0         1         2         3        14        15        16         17       18        19        20  
+/*2345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+/               
+/ Display section 1 
+001;001;0001;0000;0000;005;3;090;180;0050;0;00;0;050;000;0000;0000;0000;0011;0012;0000;0000;0000;0000;0000;0000;0000;0000;0000;0000;0000;000;000;0;010;1;3;0;000;0000;0000;0000;0000;0000;0000;0000;0000;
+/
+/ Display section 2  
+001;002;0002;-050;0000;001;1;000;000;0050;0;00;0;000;000;0000;0000;0000;0035;0036;0000;0000;0000;0000;0000;0000;0000;0000;0000;0000;0000;000;000;0;010;1;3;0;000;0000;0000;0000;0000;0000;0000;0000;0000;
+/
+/ Display section 3   Tracksections[3]	= new Tsection(canvascenterX,canvascenterY,0,-50,50,4,180,270,'C',3);
+001;003;0003;0000;-050;002;3;180;270;0050;0;00;0;050;000;0000;0000;0000;0009;0010;0000;0000;0000;0000;0000;0000;0000;0000;0000;0000;0000;002;000;0;000;1;3;0;000;0000;0000;0000;0000;0000;0000;0000;0000;
+/
+/ Display section 4    Tracksections[5]	= new Tsection(canvascenterX,canvascenterY,0,50,150,6,0,0,'H',1);
+001;004;0004;0000;0050;003;2;000;000;0150;0;00;0;000;000;0000;0000;0000;0033;0034;0000;0000;0000;0000;0000;0000;0000;0000;0000;0000;0000;002;000;0;000;1;3;0;000;0000;0000;0000;0000;0000;0000;0000;0000;
+/
+/ Display section 5     Tracksections[6]	= new Tsection(canvascenterX,canvascenterY,150,0,50,7,0,90,'C',3);
+001;005;0005;0150;0000;004;3;000;090;0050;0;00;0;050;000;0000;0000;0000;0007;0008;0000;0000;0000;0000;0000;0000;0000;0000;0000;0000;0000;000;000;0;010;1;3;0;000;0000;0000;0000;0000;0000;0000;0000;0000;
+/
+/ Display section 6 	Tracksections[7]	= new Tsection(canvascenterX,canvascenterY,200,0,50,8,0,0,'V',1);
+001;006;0006;0200;0000;006;1;000;000;0050;0;00;0;050;000;0000;0000;0000;0051;0052;0000;0000;0000;0000;0000;0000;0000;0000;0000;0000;0000;000;000;0;010;1;3;0;000;0000;0000;0000;0000;0000;0000;0000;0000;
+/
+/ Display section 7    Tracksections[8]	= new Tsection(canvascenterX,canvascenterY,150,-50,50,9,270,0,'C',3);
+001;007;0007;0150;-050;007;3;270;000;0050;0;00;0;050;000;0000;0000;0000;0005;0006;0000;0000;0000;0000;0000;0000;0000;0000;0000;0000;0000;001;000;0;180;3;3;0;000;0000;0000;0000;0000;0000;0000;0000;0000;
+/
+/ Display section 8		Tracksections[9]	= new Tsection(canvascenterX,canvascenterY,0,-100,150,10,270,0,'H',1);
+001;008;0008;0000;-100;008;2;000;000;0150;0;00;0;050;000;0000;0000;0000;0031;0032;0000;0000;0000;0000;0000;0000;0000;0000;0000;0000;0000;001;000;0;180;1;3;0;000;0000;0000;0000;0000;0000;0000;0000;0000;
+/
+X

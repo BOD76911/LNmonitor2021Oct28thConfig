@@ -1,0 +1,543 @@
+
+/**********************************************************************
+/
+/   LNRteTrainSched.dat 			New design Sept 2021  
+/
+/	Loads Route, TrainJourneys and Schedule details  
+/
+/
+/
+/***********************************************************************
+/
+/
+/  Route records  - type 001  - loads details for a route and triggers the Route generation process to build and store the data 
+/  Train Journey  - type 003  - loads Train and Journey details and store the data 
+/  Schedules      - type 005  - loads Schedule details to trigger Train Journeys on Routes 
+/
+/
+/
+/	NOTE: The file contains multiple header records (000) with one for each record type 
+/
+/*
+/*  Header format  
+/*
+/*	0	00	type - header
+/*	1	00 fields on the header
+/*	2	00 field 1 - start position 
+/*	3	00 field 1 - length 
+/*  4   00 field 1 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	5	00 field 2 - start position 
+/*	6	00 field 2 - length 
+/*  7   00 field 2 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	8	00 field 3 - start position 
+/*	9	00 field 3 - length 
+/*  10  00 field 3 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	11	00 field 4 - start position 
+/*	12	00 field 4 - length 
+/*  13  00 field 4 - type     1 - numeric - store in integer , 2 character 
+/*
+/*	X 			end of file indicator
+/*
+/*
+/*  Route Data records 
+/*
+/*	Position 	length 	X 			end of file indicator
+/*
+/*	0		  	000		int file Record type 000 for headers, 001 for data records 
+/*	4			000		int Data Record number  001 for Route records
+/*  8			000		int Route number 
+/*	12			000		int Route Start LS 
+/*  16          000     int Route mandatory midpoint LS
+/*	20			000		int Route Finish LS
+/*	24			00		int Route search steps 
+/*	27			0		int Route stop flag  
+/*	29			00		int Route stop flag device 
+/*	32			00		int Route stop flag device target 
+/*	35			0		int Route Loop Type flag - see below 
+/*	37			00		int Route number of loops
+/*	40			000		int Route Loop start LS
+/*  44          000     int Route Loop finish LS
+/*  48          0		int RteUncoupler (y/n)
+/*  50          00      int RteUncouplernumber
+/*  53			00      int RteUncouplerdevice
+/*  56          00      int RteUncouplerdevicetarget
+/*  59          00      int RteRailcarnumbernumber
+/*  71          0       int coupling flag 
+/*  73          0       int section switchover flag 
+/*  75          000     int section switchover - from LS
+/*  79          000     int section switchover - to LS 
+/*
+/*  Note: The section switchover flag is used when a locomotive or train has to be moved to one logical 
+/*        section to another while remaining in the same physical section. This usually occurs in 
+/*        stations or sidings
+/
+/	/*
+/			 *  Loop checking logic  - from program LNRouteprocess.cpp
+/			 * 
+/			 * 	Three types of loop 
+/			 * 
+/			 * 	Type 1 - a loop occurs within the overall end to end route but the loop start and end LS are 
+/			 *  different from the full route start and end LS. The 'valid loop flag' will be set to 1 and the 
+/			 *  'valid tight loop' flag will be zero. 
+/			 *  
+/			 *  Type 2 - a route where the start LS and the end LS are the same and it has a loop where the loop start 
+/			 *  and end and the same as the route start and end LS. This is 
+/			 *  called a tight loop. The 'valid loop flag' will be set to 1 and the'valid tight loop flag' will 
+/			 *  be set to 1.
+/			 *
+/            *  Type 3 - a route where the start LS and the end LS are different but the loop start and loop end are
+/            *  the same as the route start LS and end LS
+/			 * 		
+/			 *  	  
+/			 */
+/
+/
+/    Route commands
+/
+/		Route device commands
+/   
+/   0  =  Null - no action 
+/   1  = MOVE - move to next section
+/   2  = STPD(x) - stop at device x
+/   3  = SLS(y) - set loco speed to be y 
+/   4  = STPC   - stop if previous section is clear 
+/   5  = STOP 
+/   6  = RLD(z) - reset logical device z
+/  7  = RLA    - reset all logical devices
+/   8  = ELT    - Enable logical device trigger 
+/   9  = RLT    - reset  logical device trigger 
+/  10  = DLD    - disable device scanner
+/  11  = ETCS   - enable train car scanning 
+/  12  = DTCS   - disable train car scanning 
+/  13  = SDC(a,b) - set device a counter to b 
+/  14  = RDC(a)   - reset device a counter to zero  
+/  15  = STPB     - stop at device or previous section clear 
+/  16  = STPM     - stop at device or move to next section
+/  17  = RRSC(x,y)   - reset set route step counter to step x, substep y  
+/  18  = ILCC   		- increment the actual loop counter 
+/  19  = BLCT(x,y)   - branch if loop counter actual = target   
+/  20  = SLCT   - set loop counter target value  
+/  21  = BLFS(x,y)   - branch if loop stop flag is set    
+/  22  = STCC(d,v)   - stop if count on device d = value v
+/  24  = EUD(a,b,c) - Enable uncoupler a with device b on target c
+/ 
+/	
+/   column 27 stop flag values 
+
+/			if (Stoptypeflag == 1)            STPC";  // stop if previous section clear
+/			
+/			if (Stoptypeflag == 2)            STPD";  // stop at device
+/
+/			if (Stoptypeflag == 3)            STPB";  // stop at device or previous section clear
+/
+/			if (Stoptypeflag == 4)            STPM";  // stop at device or move to next section
+/			
+/			if (Stoptypeflag == 5)            STCC";  // stop if count on device reaches target
+/			 
+/			if (Stoptypeflag == 6)            STPX";  // stop if loco detected in CS and PS at same time
+/			
+/			if (Stoptypeflag == 7)            STDC"; // stop at device and couple loco to train
+/						
+/           if (Stoptypeflag == 8)            STOP"; // stop immediately , Rte cmd -> 5
+/
+/
+/
+/* 
+000;22;04;003;01;08;003;01;12;003;01;16;003;01;20;002;01;23;001;01;25;002;01;28;002;01;31;001;01;33;003;01;37;003;01;41;002;01;44;001;1;46;002;01;49;002;01;52;002;01;55;002;01;58;008;02;67;001;01;69;001;01;71;003;01;75;003;01
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+/*        1         2         3         4         5         6         7         8         9
+/*23456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+/ 
+/
+001;001;001;001;000;007;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 1 ;0;0;000;000;
+001;001;002;028;000;028;15;0;00;00;1;00;000;000;0;00;00;00;00;Route 2 ;0;0;000;000;
+001;001;003;001;000;021;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 3 ;0;0;000;000;
+001;001;004;021;000;021;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 4 ;0;0;000;000;
+001;001;005;001;000;009;15;1;00;00;0;00;000;000;0;00;00;00;00;Route 5 ;0;0;000;000;
+001;001;006;001;000;009;15;4;00;00;0;00;000;000;0;00;00;00;00;Route 6 ;0;0;000;000;
+001;001;007;015;000;015;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 7 ;0;0;000;000;
+001;001;008;038;000;038;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 8 ;0;0;000;000;
+001;001;009;044;000;044;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 9 ;0;0;000;000;
+001;001;010;069;000;069;15;0;00;00;0;00;000;000;0;00;00;00;00;Route 10;0;0;000;000;
+001;001;011;093;000;093;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 11;0;0;000;000;
+001;001;012;087;000;087;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 12;0;0;000;000;
+001;001;013;083;000;083;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 13;0;0;000;000;
+001;001;014;150;000;150;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 14;0;0;000;000;
+001;001;015;128;000;128;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 15;0;0;000;000;
+001;001;016;122;000;122;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 16;0;0;000;000;
+001;001;017;015;000;093;20;8;00;00;0;00;000;000;0;00;00;00;00;Route 17;0;0;000;000;
+001;001;018;093;000;015;20;8;00;00;0;00;000;000;0;00;00;00;00;Route 18;0;0;000;000;
+001;001;019;128;000;128;20;8;00;00;0;00;000;000;0;00;00;00;00;Route 19;0;0;000;000;
+001;001;020;015;093;015;25;8;00;00;0;00;000;000;0;00;00;00;00;Route 20;0;0;000;000;
+001;001;021;093;000;169;15;2;01;01;0;00;000;000;0;00;00;00;00;Route 21;0;0;000;000;
+001;001;022;015;093;015;25;8;00;00;0;00;000;000;0;00;00;00;00;Route 22;0;0;000;000;
+001;001;023;093;000;169;15;1;00;00;0;00;000;000;0;00;00;00;00;Route 23;0;0;000;000;
+/
+/  Cross over routes
+/
+/   Rte 24 :  15 -> 93
+/
+001;001;024;015;000;093;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 24;0;0;000;000;
+/
+/   Rte 25 :  15 -> 87
+/
+001;001;025;015;000;087;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 25;0;0;000;000;
+/
+/   Rte 26 :  15 -> 83
+/
+001;001;026;015;000;083;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 26;0;0;000;000;
+/
+/   Rte 27 :  21 -> 93
+/
+001;001;027;021;000;093;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 27;0;0;000;000;
+/
+/   Rte 28 :  21 -> 87
+/
+001;001;028;021;000;087;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 28;0;0;000;000;
+/
+/   Rte 29 :  21 -> 83
+/
+001;001;029;021;000;083;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 29;0;0;000;000;
+/
+/   Rte 30 :  93 -> 15
+/
+001;001;030;093;000;015;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 30;0;0;000;000;
+/
+/   Rte 31 :  87 -> 15
+/
+001;001;031;087;000;015;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 31;0;0;000;000;
+/
+/   Rte 32 :  83 -> 15
+/
+001;001;032;083;000;015;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 32;0;0;000;000;
+/
+/   Rte 33 :  93 -> 21
+/
+001;001;033;093;000;021;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 33;0;0;000;000;
+/
+/   Rte 34 :  87 -> 21
+/
+001;001;034;087;000;021;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 34;0;0;000;000;
+/
+/   Rte 35 :  83 -> 21
+/
+001;001;035;083;000;021;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 35;0;0;000;000;
+/
+/
+/   Rte 36 :  251 -> 231
+/
+001;001;036;251;000;231;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 36;0;0;000;000;
+/
+/
+/   Rte 37 :  232 -> 252
+/
+001;001;037;232;000;252;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 37;0;0;000;000;
+/
+/   Rte 38 :  151 -> 173   station approach
+/
+001;001;038;151;000;173;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 38;0;0;000;000;
+/
+/   Rte 39 :  166 -> 150   station departure
+/
+001;001;039;166;000;150;15;8;00;00;0;00;000;000;0;00;00;00;00;Route 39;0;0;000;000;
+/
+/*
+/*
+/*  Train Route detail records for Train journeys 
+/*
+/*	Position 	length 	X 			end of file indicator
+/*
+/*	0		  	000		int file Record type 000 for headers, 001 for data records 
+/*	4			000		int Data Record number  003 for Train Route records
+/*  8			000		int Train Route number 
+/*	12			0		int Train type  
+/*	14			0000	int Loco DCC code
+/*	19			00		int DCC slot number 
+/*	22			00		int Loco number as in loco all data table. Used to fetch speed data
+/*	25			00		int Train number 
+/*	28			00		int Route number of journey 
+/*  31          00      int Journey number 
+/*	34			0		int Simulator  0 = no simulator, 1 = simulated run  
+/*	36          0       int couple loco to train on finish
+/*  38          0       int loco direction reversed
+/*
+000;12;04;003;01;08;003;01;12;001;01;14;004;01;19;002;01;22;002;01;25;002;01;28;002;01;31;002;01;34;001;01;36;001;01;38;001;01;
+/*-------------------------------------------------------------------------------------
+/*        1         2         3         4         5         6         7         8         9
+/*23456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+/
+001;003;001;1;0212;00;02;01;01;01;0;0;0;
+001;003;002;1;1029;00;01;01;02;02;0;0;0;
+001;003;003;1;0212;00;02;01;03;03;0;0;0;
+001;003;004;1;0212;00;02;01;04;04;0;0;0;
+/
+/  IMPORTANT - check route and journey details are correct for each record
+/
+/
+/ Regression test simulator runs
+/
+/  Journey 5 -> Route 3 sim - STOP command
+/
+001;003;005;1;0212;00;02;01;03;05;1;0;0;
+/  
+/  Journey 6 -> Route 1 sim
+/
+001;003;006;1;0212;00;02;01;01;06;1;0;0;
+/
+/  Journey 7 -> Route 5 sim   STPC command
+/
+001;003;007;1;0212;00;02;01;05;07;1;0;0;
+/
+/  Journey 8 ->Route 6 sim  STPM command
+/
+001;003;008;1;0212;00;02;01;06;08;1;0;0;
+/
+/  Journey 9 ->Route 7 LS 15 to LS15 
+/
+/*        1         2         3         4         5         6         7         8         9
+/*23456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+/
+001;003;009;1;0102;00;02;01;07;09;0;0;0;
+/
+/ Journey 10 120 Route 4 LS 21 to LS 21 
+/
+001;003;010;1;0120;00;06;01;04;10;0;0;0;
+/
+/ Journey 11 212 on Route 7 LS 15 to LS 15
+/
+001;003;011;1;0212;00;02;01;07;11;0;0;0;
+/
+/ Journey 12 1029 Route 4 LS 21 to LS 21
+/
+001;003;012;1;1029;00;01;01;04;12;0;0;0;
+/
+/*        1         2         3         4         5         6         7         8         9
+/*23456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+/
+/ Journey 13  Loco 101 on Route 8 LS 38 to 38
+/
+001;003;013;1;0101;00;05;01;08;13;0;0;0;
+/
+/ Journey 14  Loco 110 on Route 9 LS 44 to 44
+/
+001;003;014;1;0110;00;04;01;09;14;0;0;0;
+/
+/ Journey 15  Loco 1029 on Route 10 LS 69 to 69 - simulation
+/
+001;003;015;1;1029;00;01;01;10;15;1;0;0;
+/
+/ Journey 16  Loco 0079 on Route 11 LS 93 to 93 
+/
+001;003;016;1;0079;00;09;01;11;16;0;0;0;
+/
+/ Journey 17  Loco 75 on Route 12 LS 87 to 87 
+/
+001;003;017;1;0075;00;08;01;12;17;0;0;0;
+/
+/ Journey 18  Loco 800 on Route 14 LS 150 to 150 
+/
+001;003;018;1;800;00;01;01;14;18;0;0;0;
+/
+/ Journey 19  Loco 212 on Route 26 LS 15 to 83 
+/
+001;003;019;1;212;00;01;01;26;19;0;0;0;
+/
+/ Journey 20  Loco 120 on Route 32 LS 83 to 15 
+/
+001;003;020;1;120;00;00;01;32;20;0;0;0;
+/
+/ Journey 21  Loco 120 on Route 29 LS 21 to 83 
+/
+001;003;021;1;120;00;00;01;29;21;0;0;0;
+/
+/ Journey 22  Loco 120 on Route 35 LS 83 to 21 
+/
+001;003;022;1;0120;00;00;01;35;22;0;0;0;
+/
+/ Journey 23  Loco 70 on Route 19 LS 128 to 128 
+/
+001;003;023;1;070;00;00;01;19;23;0;0;1;
+/
+/ Journey 24  Loco 75 on Route 31 LS 87 to 15 
+/
+001;003;024;1;075;00;00;01;31;24;0;0;0;
+/
+/ Journey 25  Loco 75 on Route 25 LS 15 to 87 
+/
+001;003;025;1;075;00;00;01;25;25;0;0;0;
+/
+/ Journey 26  Loco 102 on Route 24 LS 15 to 93 
+/
+001;003;026;1;102;00;00;01;24;26;0;0;0;
+/
+/ Journey 27  Loco 102 on Route 30 LS 93 to 15 
+/
+001;003;027;1;102;00;00;01;30;27;0;0;0;
+/
+/ Journey 28  Loco 120 on Route 25 LS 15 to 87 
+/
+001;003;028;1;120;00;00;01;25;28;0;0;0;
+/
+/ Journey 29  Loco 102 on Route 31 LS 87 to 15 
+/
+001;003;029;1;102;00;00;01;31;29;0;0;1;
+/
+/ Journey 30  Loco 102 on Route 26 LS 15 to 83 
+/
+001;003;030;1;102;00;00;01;26;30;0;0;1;
+/
+/ Journey 31  Loco 212 on Route 32 LS 83 to 15 
+/
+001;003;031;1;212;00;00;01;32;31;0;0;0;
+/
+/ Journey 32  Loco 120 on Route 27 LS 21 to 93 
+/
+001;003;032;1;120;00;00;01;27;32;0;0;0;
+/
+/ Journey 33  Loco 102 on Route 32 LS 83 to 15 
+/
+001;003;033;1;102;00;00;01;32;33;0;0;1;
+/
+/ Journey 34  Loco 120 on Route 28 LS 21 to 87 
+/
+001;003;034;1;120;00;00;01;28;34;0;0;0;
+/
+/ Journey 35  Loco 102 on Route 34 LS 87 to 21 
+/
+001;003;035;1;102;00;00;01;34;35;0;0;1;
+/
+/ Journey 36  Loco 102 on Route 29 LS 21 to 83 
+/
+001;003;036;1;102;00;00;01;29;36;0;0;1;
+/
+/ Journey 37  Loco 120 on Route 35 LS 83 to 21 
+/
+001;003;037;1;120;00;00;01;35;37;0;0;0;
+/
+/ Journey 38  Loco 1657 on Route 28 LS 21 to 87 
+/
+001;003;038;1;1657;00;00;01;28;38;0;0;0;
+/
+/ Journey 39  Loco 212 on Route 34 LS 87 to 21 
+/
+001;003;039;1;212;00;00;01;34;39;0;0;0;
+/
+/ Journey 40  Loco 212 on Route 29 LS 21 to 83 
+/
+001;003;040;1;212;00;00;01;29;40;0;0;0;
+/
+/ Journey 41  Loco 212 on Route 25 LS 15 to 87 
+/
+001;003;041;1;212;00;00;01;25;41;0;0;0;
+/
+/ Journey 42  Loco 102 on Route 25 LS 15 to 87 
+/
+001;003;042;1;102;00;00;01;25;42;0;0;1;
+/
+/ Journey 43  Loco 120 on Route 34 LS 87 to 21 
+/
+001;003;043;1;120;00;00;01;34;43;0;0;0;
+/
+/ Journey 44  Loco 120 on Route 29 LS 21 to 83 
+/
+001;003;044;1;120;00;00;01;29;44;0;0;0;
+/
+/ Journey 45  Loco 79 on Route 36 LS 251 to 231 
+/
+001;003;045;1;79;00;00;01;36;45;0;0;0;
+/
+/ Journey 46  Loco 79 on Route 37 LS 231 to 251 
+/
+001;003;046;1;79;00;00;01;37;46;0;0;0;
+/
+/ Journey 47  Loco 71 on Route 36 LS 251 to 231 
+/
+001;003;047;1;71;00;00;01;36;47;0;0;0;
+/
+/ Journey 48  Loco 71 on Route 37 LS 231 to 251 
+/
+001;003;048;1;71;00;00;01;37;48;0;0;0;
+/
+/ Journey 49  Loco 800 on Route 38 LS 151 to 173 
+/
+001;003;049;1;800;00;00;01;38;49;0;0;0;
+/
+/ Journey 50  Loco 800 on Route 39 LS 174 to 150 
+/
+001;003;050;1;800;00;00;01;39;50;0;0;0;
+/
+/
+/
+/*
+/*
+/*
+/*  Scheduler detail records for Schedule Execution  
+/*
+/*	Position 	length 	X 			end of file indicator
+/*
+/*	0		  	000		int file Record type 000 for headers, 001 for data records 
+/*	4			000		int Data Record number  005 for Scheduler records
+/*  8			00		int Schedule number 
+/*	11			00		int Schedule step  
+/*	14			00		int Schedule step journey
+/*	17			00		int Start HH
+/*	20			00		int Start MM  
+/*	23			00		int Start SS 
+/*	26			00		int Start tickcounter target 
+/*	
+/*
+/
+/	Step cmd values  1 = run journey on step. 3 = reset schedule ready to rerun
+/
+/	Journey 998 used for command only steps without valid journeys
+/
+000;14;04;003;01;08;002;01;11;002;01;14;002;01;18;002;01;21;002;01;24;002;01;27;002;01;29;002;01;32;002;01;35;002;01;38;002;01;41;002;01;
+/*-------------------------------------------------------------------------------------
+/*        1         2         3         4         5         6         7         8         9
+/*23456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+/
+/ Schedule 1
+/
+001;005;01;01;009;00;00;00;2;01;00;00;00;00;
+001;005;01;02;010;00;00;00;2;01;00;00;00;00;
+001;005;01;03;000;00;00;00;2;03;00;00;00;00;
+/
+/ Schedule 2
+/
+001;005;02;01;013;00;00;00;2;01;00;00;00;00;
+001;005;02;02;014;00;00;00;2;01;00;00;00;00;
+001;005;02;03;000;00;00;00;2;03;00;00;00;00;
+/
+/ Schedule 3
+/
+001;005;03;01;016;00;00;00;2;01;00;00;00;00;
+001;005;03;02;017;00;00;00;2;01;00;00;00;00;
+001;005;03;03;000;00;00;00;2;03;00;00;00;00;
+/
+/ Schedule 4
+/
+001;005;04;01;018;00;00;00;2;01;00;00;00;00;
+001;005;04;02;023;00;00;00;2;01;00;00;00;00;
+001;005;04;03;000;00;00;00;2;03;00;00;00;00;
+/
+/ Schedule 5
+/
+001;005;05;01;039;00;00;00;2;01;00;00;00;00;
+001;005;05;02;028;00;00;00;2;01;00;00;00;00;
+001;005;05;03;033;00;00;00;2;01;00;00;00;00;
+001;005;05;04;040;00;00;00;2;01;00;00;00;00;
+001;005;05;05;043;00;00;00;2;01;00;00;00;00;
+001;005;05;06;042;00;00;00;2;01;00;00;00;00;
+001;005;05;07;031;00;00;00;2;01;00;00;00;00;
+001;005;05;08;044;00;00;00;2;01;00;00;00;00;
+001;005;05;09;035;00;00;00;2;01;00;00;00;00;
+001;005;05;10;041;00;00;00;2;01;00;00;00;00;
+001;005;05;11;020;00;00;00;2;01;00;00;00;00;
+001;005;05;12;036;00;00;00;2;01;00;00;00;00;
+/*
+/*
+X
+

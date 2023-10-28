@@ -1,0 +1,2223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title> LN Monitor Site </title>
+<link rel="stylesheet" type="text/css" href="LNP2023style.css">
+</head>
+<body onload="PageloadFunction()">
+
+<h2> LocoNet monitor LNP2023 - LNMonitor Controller Overview: June 2023 </h2>
+
+<b> 
+<div id="Servertime">
+ Server Time : #1   
+ </div>       
+</b>
+
+<p>
+<div id="Pagecontrolbuttons">
+<input type="checkbox" name="Srceflag" id="Srceflagcheck" value="SrceON"> Display source data message<br>
+<button onclick="myStopFunction()">Stop auto refresh</button>
+<button onclick="myStartFunction()">Start auto refresh</button>
+<button onclick="CheckdataFunction()">Check inputs</button>
+<button onclick="Checkmessage()">Check message</button> 
+<a href="http://192.168.1.138:8091/LNP16TT.html">Turntable Control</a>
+</div>
+
+<div id="checkmsg"> No messages </div>
+</p>
+<p>
+<div id="Uncouplerbuttons">
+<button onclick="UCR(3)">UCR1</button>
+<button onclick="UCR(4)">UCR2</button>
+<button onclick="UCR(5)">UCR3</button>
+<button onclick="UCR(6)">UCR4</button> 
+
+</div>
+</p>
+<p>
+<div id="Switchpointbuttons"> 
+ Switch Number : <input type="text" name="swtch" id="swcode" value="01" size="2"><br>
+ <input type="radio" name="switch" id="swopenflag" value="1" checked> Open<br>
+ <input type="radio" name="switch" id="swclosedflag" value="0"> Close<br> 
+ <button onclick="SWset(0)">Submit</button>
+ <p>
+ <button onclick="SWsetallclosed()">Close all switches</button>
+ </p>
+<br>   
+
+</div>
+</p>
+
+<div id="PS-LS-sectioncontrols">
+<p>
+Physical section : <input type="text" name="Psc" id="PScode" value="00" size="1">
+<button onclick="PSset(1)">Set</button>
+<button onclick="PSset(0)">Clear</button>
+<button onclick="PSset(3)">Clear all Physical Sections</button>
+</p>
+<p>
+Logical section: <input type="text" name="Lgsc" id="LScode" value="000" size="3">
+<p>
+ Train ID: <input type="text" name="TrID" id="TrIDcode" value="0"size="1"> 
+ code: <input type="text" name="Tcode" id="LSTcode" value="0000"size="3"> 
+<button onclick="LSset(1)">Set</button>
+<button onclick="LSset(4)">Couple to loco</button>
+<button onclick="LSset(5)">Decouple from loco</button>
+</p>
+<button onclick="LSset(3)">Clear all Logical Sections</button> 
+</p>
+<p>
+Slot code  : <input type="text" name="slcd" id="Slotcodevalue" value="01" size="1">
+ Speed : <input type="text" name="Speed" id="Slotcodespeed" value="000"size="2"><br>
+ Direction : <input type="text" name="Direction" id="Slotcodedirection" value="0"size="1">
+<button onclick="SLCset(1)">Set</button>
+<button onclick="SLCset(3)">Stop all slots</button> 
+</p>
+<p>
+
+Logical device: <input type="text" name="Lgdc" id="LDid" value="00" size="2">
+<button onclick="LDset(1)">Set</button>
+<button onclick="LDset(0)">Reset device</button>
+<button onclick="LDset(3)">Clear all Devices</button>
+</p>
+</div>
+<div id="Stopcheckstatustable">
+<table id="tbl_3" style="display: inline-block; text-align:right; border: 1px solid; ">	
+	
+	<tr>
+		<td id="PSt0">Stop check:</td>			
+		<td id="DPSt1">S1</td>
+		<td id="DPSt2">S2</td>
+		<td id="DPSt3">S3</td>
+		<td id="DPSt4">S4</td>
+		<td id="DPSt5">S5</td>
+		<td id="DPSt6">S6</td>
+		<td id="DPSt7">S7</td>
+		<td id="DPSt8">S8</td>		
+	</tr>
+	<tr>
+		<td id="PSt0">Type:</td>			
+		<td id="Sfty1">0</td>
+		<td id="Sfty2">0</td>
+		<td id="Sfty3">0</td>
+		<td id="Sfty4">0</d>
+		<td id="Sfty5">0</td>
+		<td id="Sfty6">0</td>
+		<td id="Sfty7">0</td>
+		<td id="Sfty8">0</td>		
+	</tr>
+	<tr>
+		<td id="PSt0">Enabled:</td>			
+		<td id="Sft1">0</td>
+		<td id="Sft2">0</td>
+		<td id="Sft3">0</td>
+		<td id="Sft4">0</td>
+		<td id="Sft5">0</td>
+		<td id="Sft6">0</td>
+		<td id="Sft7">0</td>
+		<td id="Sft8">0</td>		
+	</tr>
+	<tr>
+		<td id="PSt0">Status:</td>			
+		<td id="SfSt1">0</td>
+		<td id="SfSt2">0</td>
+		<td id="SfSt3">0</td>
+		<td id="SfSt4">0</td>
+		<td id="SfSt5">0</td>
+		<td id="SfSt6">0</td>
+		<td id="SfSt7">0</td>
+		<td id="SfSt8">0</td>		
+	</tr>
+	<tr>
+		<td id="PSt0">Device No:</td>			
+		<td id="SfdvSt1">00</td>
+		<td id="SfdvSt2">00</td>
+		<td id="SfdvSt3">00</td>
+		<td id="SfdvSt4">00</td>
+		<td id="SfdvSt5">00</td>
+		<td id="SfdvSt6">00</td>
+		<td id="SfdvSt7">00</td>
+		<td id="SfdvSt8">00</td>		
+	</tr>
+	<tr>
+		<td id="PSt0">Prev Section:</td>			
+		<td id="PsSt1">000</td>
+		<td id="PsSt2">000</td>
+		<td id="PsSt3">000</td>
+		<td id="PsSt4">000</td>
+		<td id="PsSt5">000</td>
+		<td id="PsSt6">000</td>
+		<td id="PsSt7">000</td>
+		<td id="PsSt8">000</td>		
+	</tr>	
+	<tr>
+		<td id="PSt0">Curr Section:</td>			
+		<td id="CSSt1">000</td>
+		<td id="CSSt2">000</td>
+		<td id="CSSt3">000</td>
+		<td id="CSSt4">000</td>
+		<td id="CSSt5">000</td>
+		<td id="CSSt6">000</td>
+		<td id="CSSt7">000</td>
+		<td id="CSSt8">000</td>		
+	</tr>	
+	<tr>
+		<td id="PSt0">Slot to stop:</td>			
+		<td id="LCSSt1">00</td>
+		<td id="LCSSt2">00</td>
+		<td id="LCSSt3">00</td>
+		<td id="LCSSt4">00</td>
+		<td id="LCSSt5">00</td>
+		<td id="LCSSt6">00</td>
+		<td id="LCSSt7">00</td>
+		<td id="LCSSt8">00</td>		
+	</tr>	
+	<tr>
+		<td id="PSt0">Loco Tcode:</td>			
+		<td id="LCTSSt1">0000</td>
+		<td id="LCTSSt2">0000</td>
+		<td id="LCTSSt3">0000</td>
+		<td id="LCTSSt4">0000</td>
+		<td id="LCTSSt5">0000</td>
+		<td id="LCTSSt6">0000</td>
+		<td id="LCTSSt7">0000</td>
+		<td id="LCTSSt8">0000</td>		
+	</tr>	
+</table>
+
+</div>
+<div id="Devicestatustable">
+<table id="Devicedetail" style="display: inline-block; text-align:right; border: 1px solid; ">	
+	
+	<tr>
+		<td id="PSt0">Detector:</td>			
+		<td id="DPSt1">D1</td>
+		<td id="DPSt2">D2</td>
+		<td id="DPSt3">D3</td>
+		<td id="DPSt4">D4</td>
+		<td id="DPSt5">D5</td>
+		<td id="DPSt6">D6</td>
+		<td id="DPSt7">D7</td>
+		<td id="DPSt8">D8</td>		
+	</tr>
+	<tr>
+		<td id="PSt0">Type:</td>			
+		<td id="Dty1">0</td>
+		<td id="Dty2">0</td>
+		<td id="Dty3">0</td>
+		<td id="Dty4">0</td>
+		<td id="Dty5">0</td>
+		<td id="Dty6">0</td>
+		<td id="Dty7">0</td>
+		<td id="Dty8">0</td>		
+	</tr>
+	<tr>
+		<td id="PSt0">Enabled:</td>			
+		<td id="DESt1">0</td>
+		<td id="DESt2">0</td>
+		<td id="DESt3">0</td>
+		<td id="DESt4">0</td>
+		<td id="DESt5">0</td>
+		<td id="DESt6">0</td>
+		<td id="DESt7">0</td>
+		<td id="DESt8">0</td>		
+	</tr>
+	<tr>
+		<td id="PSt0">Status:</td>			
+		<td id="DSt1">0</td>
+		<td id="DSt2">0</td>
+		<td id="DSt3">0</td>
+		<td id="DSt4">0</td>
+		<td id="DSt5">0</td>
+		<td id="DSt6">0</td>
+		<td id="DSt7">0</td>
+		<td id="DSt8">0</td>		
+	</tr>
+	<tr>
+		<td id="PSt0">Device No:</td>			
+		<td id="DUSt1">0</td>
+		<td id="DUSt2">0</td>
+		<td id="DUSt3">0</td>
+		<td id="DUSt4">0</td>
+		<td id="DUSt5">0</td>
+		<td id="DUSt6">0</td>
+		<td id="DUSt7">0</td>
+		<td id="DUSt8">0</td>		
+	</tr>
+	<tr>
+		<td id="PSt0">TgrStat:</td>			
+		<td id="TgSt1">0</td>
+		<td id="TgSt2">0</td>
+		<td id="TgSt3">0</td>
+		<td id="TgSt4">0</td>
+		<td id="TgSt5">0</td>
+		<td id="TgSt6">0</td>
+		<td id="TgSt7">0</td>
+		<td id="TgSt8">0</td>		
+	</tr>
+	<tr>
+		<td id="PSt0">Count Tgr Enabled:</td>			
+		<td id="CTEt1">0</td>
+		<td id="CTEt2">0</td>
+		<td id="CTEt3">0</td>
+		<td id="CTEt4">0</td>
+		<td id="CTEt5">0</td>
+		<td id="CTEt6">0</td>
+		<td id="CTEt7">0</td>
+		<td id="CTEt8">0</td>		
+	</tr>
+	<tr>
+		<td id="PSt0">Count Act:</td>			
+		<td id="CTAt1">0</td>
+		<td id="CTAt2">0</td>
+		<td id="CTAt3">0</td>
+		<td id="CTAt4">0</td>
+		<td id="CTAt5">0</td>
+		<td id="CTAt6">0</td>
+		<td id="CTAt7">0</td>
+		<td id="CTAt8">0</td>		
+	</tr>
+	<tr>
+		<td id="PSt0">Count Target:</td>			
+		<td id="CTTt1">0</td>
+		<td id="CTTt2">0</td>
+		<td id="CTTt3">0</td>
+		<td id="CTTt4">0</td>
+		<td id="CTTt5">0</td>
+		<td id="CTTt6">0</td>
+		<td id="CTTt7">0</td>
+		<td id="CTTt8">0</td>		
+	</tr>
+	</table>
+	<p>
+	Device code  : <input type="text" name="dvcd" id="dvcode" value="01" size="2">
+ 	Enable : <input type="text" name="Denable" id ="dvenable" value="0" size="2"><br>
+ 	Status : <input type="text" name="Dstatus" id ="dvstatus" value="0"size="2">
+ 	Counter Target: <input type="text" name="Cnttarget" id="dvcntarget" value="00"size="2">
+ 	Enable Count trigger :<input type="text" name="Cnttrig" id="dvencntrig" value="0"size="1">
+ 	</p>
+ 	<p>
+ 	<button onclick="DPset(1)">Update Device</button>
+	<button onclick="DPset(0)">Reset Device</button>
+	<button onclick="DPset(3)">Reset All Devices</button>
+	</p>
+	<p>
+	<button onclick="DPCset(1)">Set Counter trig</button>
+	<button onclick="DPCset(0)">Reset Counter</button>
+	<button onclick="DPCset(3)">Reset All Counters</button>	
+	</p>
+	 
+</div>
+
+
+<div id="PSDSmessages">
+<div id="PSmessage">
+0000 00-00-00
+</div>
+<div id="PDmessage">
+0000 00-00-00
+</div>
+</div>
+<div id="Locomovementdata">
+<table id="tbl_3" style="display: inline-block; text-align:right; border: 1px solid; ">		
+	<h3>Locomotive Operation </h3>
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Loco Number:</td>			
+		<td id="DPSt1">L1</td>
+		<td id="DPSt2">L2</td>
+		<td id="DPSt3">L3</td>
+		<td id="DPSt4">L4</td>
+		<td id="DPSt5">L5</td>
+		<td id="DPSt6">L6</td>		
+		<td id="DPSt7">L7</td>
+		<td id="DPSt8">L8</td>
+		<td id="DPSt9">L9</td>
+		<td id="DPSt10">L10</td>
+		<td id="DPSt11">L11</td>
+		<td id="DPSt12">L12</td>	
+		<td id="DPSt13">L13</td>
+		<td id="DPSt14">L14</td>
+		<td id="DPSt15">L15</td>
+		<td id="DPSt16">L16</td>		
+		<td id="DPSt17">L17</td>
+		<td id="DPSt18">L18</td>
+		<td id="DPSt19">L19</td>			
+	</tr>
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Enabled:</td>			
+		<td id="LcE1">0</td>
+		<td id="LcE2">0</td>
+		<td id="LcE3">0</td>
+		<td id="LcE4">0</d>
+		<td id="LcE5">0</td>
+		<td id="LcE6">0</td>	
+		<td id="LcE7">0</td>
+		<td id="LcE8">0</td>
+		<td id="LcE9">0</td>
+		<td id="LcE10">0</d>
+		<td id="LcE11">0</td>
+		<td id="LcE12">0</td>	
+		<td id="LcE13">0</td>
+		<td id="LcE14">0</td>
+		<td id="LcE15">0</td>
+		<td id="LcE16">0</d>
+		<td id="LcE17">0</td>
+		<td id="LcE18">0</td>	
+		<td id="LcE19">0</td>			
+	</tr>
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Route:</td>			
+		<td id="LcRt1">00</td>
+		<td id="LcRt2">00</td>
+		<td id="LcRt3">00</td>
+		<td id="LcRt4">00</td>
+		<td id="LcRt5">00</td>
+		<td id="LcRt6">00</td>	
+		<td id="LcRt7">00</td>
+		<td id="LcRt8">00</td>
+		<td id="LcRt9">00</td>
+		<td id="LcRt10">00</td>
+		<td id="LcRt11">00</td>
+		<td id="LcRt12">00</td>
+		<td id="LcRt13">00</td>
+		<td id="LcRt14">00</td>
+		<td id="LcRt15">00</td>
+		<td id="LcRt16">00</td>
+		<td id="LcRt17">00</td>
+		<td id="LcRt18">00</td>	
+		<td id="LcRt19">00</td>
+	</tr>
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Step:</td>			
+		<td id="LcSt1">00</td>
+		<td id="LcSt2">00</td>
+		<td id="LcSt3">00</td>
+		<td id="LcSt4">00</td>
+		<td id="LcSt5">00</td>
+		<td id="LcSt6">00</td>
+		<td id="LcSt7">00</td>
+		<td id="LcSt8">00</td>
+		<td id="LcSt9">00</td>
+		<td id="LcSt10">00</td>
+		<td id="LcSt11">00</td>
+		<td id="LcSt12">00</td>	
+		<td id="LcSt13">00</td>
+		<td id="LcSt14">00</td>
+		<td id="LcSt15">00</td>
+		<td id="LcSt16">00</td>
+		<td id="LcSt17">00</td>
+		<td id="LcSt18">00</td>
+		<td id="LcSt19">00</td>				
+	</tr>
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Substep:</td>			
+		<td id="LcSSt1">0</td>
+		<td id="LcSSt2">0</td>
+		<td id="LcSSt3">0</td>
+		<td id="LcSSt4">0</td>
+		<td id="LcSSt5">0</td>
+		<td id="LcSSt6">0</td>	
+		<td id="LcSSt7">0</td>
+		<td id="LcSSt8">0</td>
+		<td id="LcSSt9">0</td>
+		<td id="LcSSt10">0</td>
+		<td id="LcSSt11">0</td>
+		<td id="LcSSt12">0</td>
+		<td id="LcSSt13">0</td>
+		<td id="LcSSt14">0</td>
+		<td id="LcSSt15">0</td>
+		<td id="LcSSt16">0</td>
+		<td id="LcSSt17">0</td>
+		<td id="LcSSt18">0</td>
+		<td id="LcSSt19">0</td>	
+	</tr>
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Prev Section:</td>			
+		<td id="LcPsSt1">000</td>
+		<td id="LcPsSt2">000</td>
+		<td id="LcPsSt3">000</td>
+		<td id="LcPsSt4">000</td>
+		<td id="LcPsSt5">000</td>
+		<td id="LcPsSt6">000</td>
+		<td id="LcPsSt7">000</td>
+		<td id="LcPsSt8">000</td>
+		<td id="LcPsSt9">000</td>
+		<td id="LcPsSt10">000</td>
+		<td id="LcPsSt11">000</td>
+		<td id="LcPsSt12">000</td>	
+		<td id="LcPsSt13">000</td>
+		<td id="LcPsSt14">000</td>
+		<td id="LcPsSt15">000</td>
+		<td id="LcPsSt16">000</td>
+		<td id="LcPsSt17">000</td>
+		<td id="LcPsSt18">000</td>	
+		<td id="LcPsSt19">000</td>			
+	</tr>	
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Curr Section:</td>			
+		<td id="LcCsSt1">000</td>
+		<td id="LcCsSt2">000</td>
+		<td id="LcCsSt3">000</td>
+		<td id="LcCsSt4">000</td>
+		<td id="LcCsSt5">000</td>
+		<td id="LcCsSt6">000</td>
+		<td id="LcCsSt7">000</td>
+		<td id="LcCsSt8">000</td>
+		<td id="LcCsSt9">000</td>
+		<td id="LcCsSt10">000</td>
+		<td id="LcCsSt11">000</td>
+		<td id="LcCsSt12">000</td>	
+		<td id="LcCsSt13">000</td>
+		<td id="LcCsSt14">000</td>
+		<td id="LcCsSt15">000</td>
+		<td id="LcCsSt16">000</td>
+		<td id="LcCsSt17">000</td>
+		<td id="LcCsSt18">000</td>
+		<td id="LcCsSt19">000</td>			
+	</tr>	
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Next section:</td>			
+		<td id="LcNSSt1">000</td>
+		<td id="LcNSSt2">000</td>
+		<td id="LcNSSt3">000</td>
+		<td id="LcNSSt4">000</td>
+		<td id="LcNSSt5">000</td>
+		<td id="LcNSSt6">000</td>
+		<td id="LcNSSt7">000</td>
+		<td id="LcNSSt8">000</td>
+		<td id="LcNSSt9">000</td>
+		<td id="LcNSSt10">000</td>
+		<td id="LcNSSt11">000</td>
+		<td id="LcNSSt12">000</td>
+		<td id="LcNSSt13">000</td>
+		<td id="LcNSSt14">000</td>
+		<td id="LcNSSt15">000</td>
+		<td id="LcNSSt16">000</td>
+		<td id="LcNSSt17">000</td>
+		<td id="LcNSSt18">000</td>
+		<td id="LcNSSt19">000</td>				
+	</tr>	
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Loco Tcode:</td>			
+		<td id="LCTcde1">0000</td>
+		<td id="LCTcde2">0000</td>
+		<td id="LCTcde3">0000</td>
+		<td id="LCTcde4">0000</td>
+		<td id="LCTcde5">0000</td>
+		<td id="LCTcde6">0000</td>
+		<td id="LCTcde7">0000</td>
+		<td id="LCTcde8">0000</td>
+		<td id="LCTcde9">0000</td>
+		<td id="LCTcde10">0000</td>
+		<td id="LCTcde11">0000</td>
+		<td id="LCTcde12">0000</td>	
+		<td id="LCTcde13">0000</td>
+		<td id="LCTcde14">0000</td>
+		<td id="LCTcde15">0000</td>
+		<td id="LCTcde16">0000</td>
+		<td id="LCTcde17">0000</td>
+		<td id="LCTcde18">0000</td>
+		<td id="LCTcde19">0000</td>						
+	</tr>	
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Slotcode:</td>			
+		<td id="LcSlc1">00</td>
+		<td id="LcSlc2">00</td>
+		<td id="LcSlc3">00</td>
+		<td id="LcSlc4">00</td>
+		<td id="LcSlc5">00</td>
+		<td id="LcSlc6">00</td>
+		<td id="LcSlc7">00</td>
+		<td id="LcSlc8">00</td>
+		<td id="LcSlc9">00</td>
+		<td id="LcSlc10">00</td>
+		<td id="LcSlc11">00</td>
+		<td id="LcSlc12">00</td>	
+		<td id="LcSlc13">00</td>
+		<td id="LcSlc14">00</td>
+		<td id="LcSlc15">00</td>
+		<td id="LcSlc16">00</td>
+		<td id="LcSlc17">00</td>
+		<td id="LcSlc18">00</td>
+		<td id="LcSlc19">00</td>						
+	</tr>	
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Act Speed:</td>			
+		<td id="LcSpd1">00</td>
+		<td id="LcSpd2">00</td>
+		<td id="LcSpd3">00</td>
+		<td id="LcSpd4">00</td>
+		<td id="LcSpd5">00</td>
+		<td id="LcSpd6">00</td>	
+		<td id="LcSpd7">00</td>
+		<td id="LcSpd8">00</td>
+		<td id="LcSpd9">00</td>
+		<td id="LcSpd10">00</td>
+		<td id="LcSpd11">00</td>
+		<td id="LcSpd12">00</td>	
+		<td id="LcSpd13">00</td>
+		<td id="LcSpd14">00</td>
+		<td id="LcSpd15">00</td>
+		<td id="LcSpd16">00</td>
+		<td id="LcSpd17">00</td>
+		<td id="LcSpd18">00</td>	
+		<td id="LcSpd19">00</td>			
+	</tr>	
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Plan Speed:</td>			
+		<td id="LcPSpd1">00</td>
+		<td id="LcPSpd2">00</td>
+		<td id="LcPSpd3">00</td>
+		<td id="LcPSpd4">00</td>
+		<td id="LcPSpd5">00</td>
+		<td id="LcPSpd6">00</td>
+		<td id="LcPSpd7">00</td>
+		<td id="LcPSpd8">00</td>
+		<td id="LcPSpd9">00</td>
+		<td id="LcPSpd10">00</td>
+		<td id="LcPSpd11">00</td>
+		<td id="LcPSpd12">00</td>
+		<td id="LcPSpd13">00</td>
+		<td id="LcPSpd14">00</td>
+		<td id="LcPSpd15">00</td>
+		<td id="LcPSpd16">00</td>
+		<td id="LcPSpd17">00</td>
+		<td id="LcPSpd18">00</td>
+		<td id="LcPSpd19">00</td>				
+	</tr>	
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">DCC Speed:</td>			
+		<td id="LcDSpd1">00</td>
+		<td id="LcDSpd2">00</td>
+		<td id="LcDSpd3">00</td>
+		<td id="LcDSpd4">00</td>
+		<td id="LcDSpd5">00</td>
+		<td id="LcDSpd6">00</td>
+		<td id="LcDSpd7">00</td>
+		<td id="LcDSpd8">00</td>
+		<td id="LcDSpd9">00</td>
+		<td id="LcDSpd10">00</td>
+		<td id="LcDSpd11">00</td>
+		<td id="LcDSpd12">00</td>		
+		<td id="LcDSpd13">00</td>
+		<td id="LcDSpd14">00</td>
+		<td id="LcDSpd15">00</td>
+		<td id="LcDSpd16">00</td>
+		<td id="LcDSpd17">00</td>
+		<td id="LcDSpd18">00</td>
+		<td id="LcDSpd19">00</td>						
+	</tr>	
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Direction:</td>			
+		<td id="LcDir1">00</td>
+		<td id="LcDir2">00</td>
+		<td id="LcDir3">00</td>
+		<td id="LcDir4">00</td>
+		<td id="LcDir5">00</td>
+		<td id="LcDir6">00</td>	
+		<td id="LcDir7">00</td>
+		<td id="LcDir8">00</td>
+		<td id="LcDir9">00</td>
+		<td id="LcDir10">00</td>
+		<td id="LcDir11">00</td>
+		<td id="LcDir12">00</td>	
+		<td id="LcDir13">00</td>
+		<td id="LcDir14">00</td>
+		<td id="LcDir15">00</td>
+		<td id="LcDir16">00</td>
+		<td id="LcDir17">00</td>
+		<td id="LcDir18">00</td>	
+		<td id="LcDir19">00</td>				
+	</tr>	
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Command:</td>			
+		<td id="LcCom1">00</td>
+		<td id="LcCom2">00</td>
+		<td id="LcCom3">00</td>
+		<td id="LcCom4">00</td>
+		<td id="LcCom5">00</td>
+		<td id="LcCom6">00</td>	
+		<td id="LcCom7">00</td>
+		<td id="LcCom8">00</td>
+		<td id="LcCom9">00</td>
+		<td id="LcCom10">00</td>
+		<td id="LcCom11">00</td>
+		<td id="LcCom12">00</td>	
+		<td id="LcCom13">00</td>
+		<td id="LcCom14">00</td>
+		<td id="LcCom15">00</td>
+		<td id="LcCom16">00</td>
+		<td id="LcCom17">00</td>
+		<td id="LcCom18">00</td>	
+		<td id="LcCom19">00</td>				
+	</tr>	
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Loop Tar:</td>			
+		<td id="LcCtt1">000</td>
+		<td id="LcCtt2">000</td>
+		<td id="LcCtt3">000</td>
+		<td id="LcCtt4">000</td>
+		<td id="LcCtt5">000</td>
+		<td id="LcCtt6">000</td>
+		<td id="LcCtt7">000</td>
+		<td id="LcCtt8">000</td>
+		<td id="LcCtt9">000</td>
+		<td id="LcCtt10">000</td>
+		<td id="LcCtt11">000</td>
+		<td id="LcCtt12">000</td>	
+		<td id="LcCtt13">000</td>
+		<td id="LcCtt14">000</td>
+		<td id="LcCtt15">000</td>
+		<td id="LcCtt16">000</td>
+		<td id="LcCtt17">000</td>
+		<td id="LcCtt18">000</td>
+		<td id="LcCtt19">000</td>						
+	</tr>
+	<tr class="Locodatadetailrow"> 
+		<td id="LCH0">Loop Act:</td>			
+		<td id="LcCta1">000</td>
+		<td id="LcCta2">000</td>
+		<td id="LcCta3">000</td>
+		<td id="LcCta4">000</td>
+		<td id="LcCta5">000</td>
+		<td id="LcCta6">000</td>
+		<td id="LcCta7">000</td>
+		<td id="LcCta8">000</td>
+		<td id="LcCta9">000</td>
+		<td id="LcCta10">000</td>
+		<td id="LcCta11">000</td>
+		<td id="LcCta12">000</td>
+		<td id="LcCta13">000</td>
+		<td id="LcCta14">000</td>
+		<td id="LcCta15">000</td>
+		<td id="LcCta16">000</td>
+		<td id="LcCta17">000</td>
+		<td id="LcCta18">000</td>
+		<td id="LcCta19">000</td>								
+	</tr>	
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Loop flg:</td>			
+		<td id="Lclstf1">0</td>
+		<td id="Lclstf2">0</td>
+		<td id="Lclstf3">0</td>
+		<td id="Lclstf4">0</td>
+		<td id="Lclstf5">0</td>
+		<td id="Lclstf6">0</td>	
+		<td id="Lclstf7">0</td>
+		<td id="Lclstf8">0</td>
+		<td id="Lclstf9">0</td>
+		<td id="Lclstf10">0</td>
+		<td id="Lclstf11">0</td>
+		<td id="Lclstf12">0</td>	
+		<td id="Lclstf13">0</td>
+		<td id="Lclstf14">0</td>
+		<td id="Lclstf15">0</td>
+		<td id="Lclstf16">0</td>
+		<td id="Lclstf17">0</td>
+		<td id="Lclstf18">0</td>	
+		<td id="Lclstf19">0</td>					
+	</tr>	
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Missing flg:</td>			
+		<td id="LcMflg1">0</td>
+		<td id="LcMflg2">0</td>
+		<td id="LcMflg3">0</td>
+		<td id="LcMflg4">0</td>
+		<td id="LcMflg5">0</td>
+		<td id="LcMflg6">0</td>
+		<td id="LcMflg7">0</td>
+		<td id="LcMflg8">0</td>
+		<td id="LcMflg9">0</td>
+		<td id="LcMflg10">0</td>
+		<td id="LcMflg11">0</td>
+		<td id="LcMflg12">0</td>	
+		<td id="LcMflg13">0</td>
+		<td id="LcMflg14">0</td>
+		<td id="LcMflg15">0</td>
+		<td id="LcMflg16">0</td>
+		<td id="LcMflg17">0</td>
+		<td id="LcMflg18">0</td>
+		<td id="LcMflg19">0</td>						
+	</tr>	
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Signal hold:</td>			
+		<td id="LsSH1">0</td>
+		<td id="LsSH2">0</td>
+		<td id="LsSH3">0</td>
+		<td id="LsSH4">0</td>
+		<td id="LsSH5">0</td>
+		<td id="LsSH6">0</td>
+		<td id="LsSH7">0</td>
+		<td id="LsSH8">0</td>
+		<td id="LsSH9">0</td>
+		<td id="LsSH10">0</td>
+		<td id="LsSH11">0</td>
+		<td id="LsSH12">0</td>
+		<td id="LsSH13">0</td>
+		<td id="LsSH14">0</td>
+		<td id="LsSH15">0</td>
+		<td id="LsSH16">0</td>
+		<td id="LsSH17">0</td>
+		<td id="LsSH18">0</td>
+		<td id="LsSH19">0</td>									
+	</tr>	
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">System hold:</td>			
+		<td id="LsSYH1">0</td>
+		<td id="LsSYH2">0</td>
+		<td id="LsSYH3">0</td>
+		<td id="LsSYH4">0</td>
+		<td id="LsSYH5">0</td>
+		<td id="LsSYH6">0</td>
+		<td id="LsSYH7">0</td>
+		<td id="LsSYH8">0</td>
+		<td id="LsSYH9">0</td>
+		<td id="LsSYH10">0</td>
+		<td id="LsSYH11">0</td>
+		<td id="LsSYH12">0</td>		
+		<td id="LsSYH13">0</td>
+		<td id="LsSYH14">0</td>
+		<td id="LsSYH15">0</td>
+		<td id="LsSYH16">0</td>
+		<td id="LsSYH17">0</td>
+		<td id="LsSYH18">0</td>	
+		<td id="LsSYH19">0</td>								
+	</tr>	
+	<tr class="Locodatadetailrow">
+		<td id="LCH0">Sim number:</td>			
+		<td id="LsSM1">000</td>
+		<td id="LsSM2">000</td>
+		<td id="LsSM3">000</td>
+		<td id="LsSM4">000</td>
+		<td id="LsSM5">000</td>
+		<td id="LsSM6">000</td>
+		<td id="LsSM7">000</td>
+		<td id="LsSM8">000</td>
+		<td id="LsSM9">000</td>
+		<td id="LsSM10">000</td>
+		<td id="LsSM11">000</td>
+		<td id="LsSM12">000</td>	
+		<td id="LsSM13">000</td>
+		<td id="LsSM14">000</td>
+		<td id="LsSM15">000</td>
+		<td id="LsSM16">000</td>
+		<td id="LsSM17">000</td>
+		<td id="LsSM18">000</td>	
+		<td id="LsSM19">000</td>								
+	</tr>	
+	<tr class="Locobuttonrow">
+		<td id="LCH0">Loco Run :</td>			
+		<td><button onclick="LNlococmd(1,1)">Run</button></td>
+		<td><button onclick="LNlococmd(2,1)">Run</button></td>	
+		<td><button onclick="LNlococmd(3,1)">Run</button></td>
+		<td><button onclick="LNlococmd(4,1)">Run</button></td>	
+		<td><button onclick="LNlococmd(5,1)">Run</button></td>
+		<td><button onclick="LNlococmd(6,1)">Run</button></td>	
+		<td><button onclick="LNlococmd(7,1)">Run</button></td>
+		<td><button onclick="LNlococmd(8,1)">Run</button></td>	
+		<td><button onclick="LNlococmd(9,1)">Run</button></td>
+		<td><button onclick="LNlococmd(10,1)">Run</button></td>	
+		<td><button onclick="LNlococmd(11,1)">Run</button></td>
+		<td><button onclick="LNlococmd(12,1)">Run</button></td>	
+		<td><button onclick="LNlococmd(13,1)">Run</button></td>
+		<td><button onclick="LNlococmd(14,1)">Run</button></td>	
+		<td><button onclick="LNlococmd(15,1)">Run</button></td>
+		<td><button onclick="LNlococmd(16,1)">Run</button></td>	
+		<td><button onclick="LNlococmd(17,1)">Run</button></td>
+		<td><button onclick="LNlococmd(18,1)">Run</button></td>	
+		<td><button onclick="LNlococmd(19,1)">Run</button></td>
+	</tr>	
+	<tr class="Locobuttonrow">
+		<td id="LCH0">Loco stop:</td>			
+		<td><button onclick="LNlococmd(1,2)">Stop</button></td> 
+		<td><button onclick="LNlococmd(2,2)">Stop</button></td>	
+		<td><button onclick="LNlococmd(3,2)">Stop</button></td>
+		<td><button onclick="LNlococmd(4,2)">Stop</button></td>	
+		<td><button onclick="LNlococmd(5,2)">Stop</button></td>
+		<td><button onclick="LNlococmd(6,2)">Stop</button></td>	
+		<td><button onclick="LNlococmd(7,2)">Stop</button></td> 
+		<td><button onclick="LNlococmd(8,2)">Stop</button></td>	
+		<td><button onclick="LNlococmd(9,2)">Stop</button></td>
+		<td><button onclick="LNlococmd(10,2)">Stop</button></td>	
+		<td><button onclick="LNlococmd(11,2)">Stop</button></td>
+		<td><button onclick="LNlococmd(12,2)">Stop</button></td>
+		<td><button onclick="LNlococmd(13,2)">Stop</button></td> 
+		<td><button onclick="LNlococmd(14,2)">Stop</button></td>	
+		<td><button onclick="LNlococmd(15,2)">Stop</button></td>
+		<td><button onclick="LNlococmd(16,2)">Stop</button></td>	
+		<td><button onclick="LNlococmd(17,2)">Stop</button></td>
+		<td><button onclick="LNlococmd(18,2)">Stop</button></td>	
+		<td><button onclick="LNlococmd(19,2)">Stop</button></td>	
+			
+	</tr>	
+	<tr class="Locobuttonrow">
+		<td id="LCH0">Restart loco:</td>			
+		<td><button onclick="LNlococmd(1,4)">Restart</button></td> 
+		<td><button onclick="LNlococmd(2,4)">Restart</button></td>	
+		<td><button onclick="LNlococmd(3,4)">Restart</button></td>
+		<td><button onclick="LNlococmd(4,4)">Restart</button></td>	
+		<td><button onclick="LNlococmd(5,4)">Restart</button></td>
+		<td><button onclick="LNlococmd(6,4)">Restart</button></td>	
+		<td><button onclick="LNlococmd(7,4)">Restart</button></td> 
+		<td><button onclick="LNlococmd(8,4)">Restart</button></td>	
+		<td><button onclick="LNlococmd(9,4)">Restart</button></td>
+		<td><button onclick="LNlococmd(10,4)">Restart</button></td>	
+		<td><button onclick="LNlococmd(11,4)">Restart</button></td>
+		<td><button onclick="LNlococmd(12,4)">Restart</button></td>	
+		<td><button onclick="LNlococmd(13,4)">Restart</button></td> 
+		<td><button onclick="LNlococmd(14,4)">Restart</button></td>	
+		<td><button onclick="LNlococmd(15,4)">Restart</button></td>
+		<td><button onclick="LNlococmd(16,4)">Restart</button></td>	
+		<td><button onclick="LNlococmd(17,4)">Restart</button></td>
+		<td><button onclick="LNlococmd(18,4)">Restart</button></td>	
+		<td><button onclick="LNlococmd(19,4)">Restart</button></td>	
+	</tr>	
+	<tr class="Locobuttonrow">
+		<td id="LCH0">Reset loco:</td>			
+		<td><button onclick="LNlococmd(1,3)">Reset</button></td> 
+		<td><button onclick="LNlococmd(2,3)">Reset</button></td>	
+		<td><button onclick="LNlococmd(3,3)">Reset</button></td>
+		<td><button onclick="LNlococmd(4,3)">Reset</button></td>	
+		<td><button onclick="LNlococmd(5,3)">Reset</button></td>
+		<td><button onclick="LNlococmd(6,3)">Reset</button></td>	
+		<td><button onclick="LNlococmd(7,3)">Reset</button></td> 
+		<td><button onclick="LNlococmd(8,3)">Reset</button></td>	
+		<td><button onclick="LNlococmd(9,3)">Reset</button></td>
+		<td><button onclick="LNlococmd(10,3)">Reset</button></td>	
+		<td><button onclick="LNlococmd(11,3)">Reset</button></td>
+		<td><button onclick="LNlococmd(12,3)">Reset</button></td>	
+		<td><button onclick="LNlococmd(13,3)">Reset</button></td> 
+		<td><button onclick="LNlococmd(14,3)">Reset</button></td>	
+		<td><button onclick="LNlococmd(15,3)">Reset</button></td>
+		<td><button onclick="LNlococmd(16,3)">Reset</button></td>	
+		<td><button onclick="LNlococmd(17,3)">Reset</button></td>
+		<td><button onclick="LNlococmd(18,3)">Reset</button></td>	
+		<td><button onclick="LNlococmd(19,3)">Reset</button></td>
+	</tr>	
+</table>
+</div>
+<div id="Simtitles">		
+		<table id="tbl_11" style="display: inline-block; text-align:left; border: 1px solid; ">
+		<tr class="separator" />	
+		<tr>
+			<th>Sim Number </th>						
+		</tr>
+		<tr class="separator" />			
+		<tr>
+			<th>Select Rte code  </th>			
+		</tr>	           		
+		<tr>
+			<th>Simulator Mode   </th>			
+		</tr>
+		<tr class="separator" />	
+		<tr>
+			<th>Sim status     </th>			
+		</tr>		
+		<tr class="separator" />	
+		<tr>
+			<th>Current step </th>			
+		</tr>
+		<tr class="separator" />
+		<tr>
+			<th>Physical section </th>			
+		</tr>			
+		<tr class="separator" />	
+		<tr>
+			<th>Timer Act  </th>
+		<tr>
+		<tr class="separator" />	
+		<tr>
+			<th>Timer Target  </th>
+		<tr>
+			<th>                      </th>			
+		</tr>		
+		<tr>
+			<th>Commands       </th>			
+		</tr>	
+		<tr>
+			<th>                      </th>			
+		</tr>		
+		<tr>
+			<th>                      </th>			
+		</tr>		
+		<tr>
+			<th>                      </th>			
+		</tr>			
+		</table>
+		</div>
+		
+<div id="Simelements">
+<table id="tbl_12" style="display: inline-block; text-align:center; border: 1px solid; ">
+<tr class="separator" />		
+<tr>
+	<td id="SM1"> 1 </td>
+		<td id="SM2"> 2 </td>
+		<td id="SM3"> 3 </td>
+		<td id="SM4"> 4 </td>
+		<td id="SM5"> 5 </td>
+		<td id="SM6"> 6 </td>		
+	</td>
+</tr>
+<tr>
+<tr class="separator" />		
+<td>
+    <select id="Sim1Rteselect">
+  						<option value="01">Rte description </option> 										
+	</select>
+	</td>	
+	<td>
+    <select id="Sim2Rteselect">
+  						<option value="01">Rte description </option> 										
+	</select>
+	</td>	
+	<td>
+    <select id="Sim3Rteselect">
+  						<option value="01">Rte description </option> 										
+	</select>
+	</td>	
+	<td>
+    <select id="Sim4Rteselect">
+  						<option value="01">Rte description </option> 										
+	</select>
+	</td>	
+	<td>
+    <select id="Sim5Rteselect">
+  						<option value="01">Rte description </option> 										
+	</select>
+	</td>	
+	<td>
+    <select id="Sim6Rteselect">
+  						<option value="01">Rte description </option> 										
+	</select>
+	</td>	
+</tr>
+<tr>
+<tr class="separator" />		
+<td>
+    <select id="Sim1SRselect">
+  						<option value="01">STEP</option> 										
+	</select>
+	</td>	
+	<td>
+    <select id="Sim2SRselect">
+  						<option value="01">STEP</option> 										
+	</select>
+	</td>	
+	<td>
+    <select id="Sim3SRselect">
+  						<option value="01">STEP</option> 										
+	</select>
+	</td>	
+	<td>
+    <select id="Sim4SRselect">
+  						<option value="01">STEP</option> 										
+	</select>
+	</td>	
+	<td>
+    <select id="Sim5SRselect">
+  						<option value="01">STEP</option> 										
+	</select>
+	</td>	
+	<td>
+    <select id="Sim6SRselect">
+  						<option value="01">STEP</option> 										
+	</select>
+	</td>	
+</tr>	
+<tr class="separator" />		
+<tr>
+	<td id="SMS1"> Stopped</td>
+		<td id="SMS2">Stopped</td>
+		<td id="SMS3">Stopped</td>
+		<td id="SMS4">Stopped</td>
+		<td id="SMS5">Stopped</td>
+		<td id="SMS6">Stopped</td>		
+	</td>
+</tr>	
+<tr class="separator" />			
+<tr>
+	<td id="CSMS1"> 0</td>
+		<td id="CSMS2">0</td>
+		<td id="CSMS3">0</td>
+		<td id="CSMS4">0</td>
+		<td id="CSMS5">0</td>
+		<td id="CSMS6">0</td>		
+	</td>
+</tr>	
+<tr class="separator" />						
+<tr>
+	<td id="PSMS1">000</td>
+		<td id="PSMS2">000</td>
+		<td id="PSMS3">000</td>
+		<td id="PSMS4">000</td>
+		<td id="PSMS5">000</td>
+		<td id="PSMS6">000</td>		
+	</td>
+</tr>	
+<tr class="separator" />	
+<tr>
+	<td id="TCMS1">00</td>
+		<td id="TCMS2">00</td>
+		<td id="TCMS3">00</td>
+		<td id="TCMS4">00</td>
+		<td id="TCMS5">00</td>
+		<td id="TCMS6">00</td>		
+	</td>
+</tr>
+<tr class="separator" />	
+<tr>
+	<td id="TCTS1">00</td>
+		<td id="TCTS2">00</td>
+		<td id="TCTS3">00</td>
+		<td id="TCTS4">00</td>
+		<td id="TCTS5">00</td>
+		<td id="TCTS6">00</td>		
+	</td>
+</tr>	
+<tr>			
+		<td><button onclick="SimRcommand(1,1)">Run</button></td>
+		<td><button onclick="SimRcommand(2,1)">Run</button></td>	
+		<td><button onclick="SimRcommand(3,1)">Run</button></td>
+		<td><button onclick="SimRcommand(4,1)">Run</button></td>	
+		<td><button onclick="SimRcommand(5,1)">Run</button></td>
+		<td><button onclick="SimRcommand(6,1)">Run</button></td>	
+</tr>	
+<tr>			
+		<td><button onclick="SimRcommand(1,2)">Stop</button></td>
+		<td><button onclick="SimRcommand(2,2)">Stop</button></td>	
+		<td><button onclick="SimRcommand(3,2)">Stop</button></td>
+		<td><button onclick="SimRcommand(4,2)">Stop</button></td>	
+		<td><button onclick="SimRcommand(5,2)">Stop</button></td>
+		<td><button onclick="SimRcommand(6,2)">Stop</button></td>	
+</tr>	
+<tr>			
+		<td><button onclick="SimRcommand(1,3)">Reset</button></td>
+		<td><button onclick="SimRcommand(2,3)">Reset</button></td>	
+		<td><button onclick="SimRcommand(3,3)">Reset</button></td>
+		<td><button onclick="SimRcommand(4,3)">Reset</button></td>	
+		<td><button onclick="SimRcommand(5,3)">Reset</button></td>
+		<td><button onclick="SimRcommand(6,3)">Reset</button></td>	
+</tr>		
+<tr>			
+		<td><button onclick="SimRcommand(1,4)">Step</button></td>
+		<td><button onclick="SimRcommand(2,4)">Step</button></td>	
+		<td><button onclick="SimRcommand(3,4)">Step</button></td>
+		<td><button onclick="SimRcommand(4,4)">Step</button></td>	
+		<td><button onclick="SimRcommand(5,4)">Step</button></td>
+		<td><button onclick="SimRcommand(6,4)">Step</button></td>	
+</tr>	
+</table>
+
+</div>
+<div id="Slotcodedata">
+	<h3>DCC slot data </h3>
+	<table id="tbl_3" style="display: inline-block; text-align:right; border: 1px solid; ">	
+	<tr>
+		<td class = "DCCrowhdr" id="SCD0">DCC slot data:</td>			
+		<td class = "DCCrowhdr" id="DCCs1">S1</td>
+		<td class = "DCCrowhdr" id="DCCs2">S2</td>
+		<td class = "DCCrowhdr" id="DCCs3">S3</td>
+		<td class = "DCCrowhdr" id="DCCs4">S4</td>	
+		<td class = "DCCrowhdr" id="DCCs5">S5</td>
+		<td class = "DCCrowhdr" id="DCCs6">S6</td>
+		<td class = "DCCrowhdr" id="DCCs7">S7</td>
+		<td class = "DCCrowhdr" id="DCCs8">S8</td>
+		<td class = "DCCrowhdr" id="DCCs9">S9</td>
+		<td class = "DCCrowhdr" id="DCCs10">S10</td>
+		<td class = "DCCrowhdr" id="DCCs11">S11</td>
+		<td class = "DCCrowhdr" id="DCCs12">S12</td>	
+		<td class = "DCCrowhdr" id="DCCs13">S13</td>
+		<td class = "DCCrowhdr" id="DCCs14">S14</td>
+		<td class = "DCCrowhdr" id="DCCs15">S15</td>
+		<td class = "DCCrowhdr" id="DCCs16">S16</td>	
+		<td class = "DCCrowhdr" id="DCCs17">S17</td>
+		<td class = "DCCrowhdr" id="DCCs18">S18</td>
+		<td class = "DCCrowhdr" id="DCCs19">S19</td>		
+	</tr>
+	
+	<tr>
+		<td class = "DCCrowdetail" id="SCTcode1">Train code:</td>			
+		<td class = "DCCrowdetail" id="slotT1">0000</td>
+		<td class = "DCCrowdetail" id="slotT2">0000</td>
+		<td class = "DCCrowdetail" id="slotT3">0000</td>
+		<td class = "DCCrowdetail" id="slotT4">0000</td>
+		<td class = "DCCrowdetail" id="slotT5">0000</td>
+		<td class = "DCCrowdetail" id="slotT6">0000</td>
+		<td class = "DCCrowdetail" id="slotT7">0000</td>
+		<td class = "DCCrowdetail" id="slotT8">0000</td>	
+		<td class = "DCCrowdetail" id="slotT9">0000</td>
+		<td class = "DCCrowdetail" id="slotT10">0000</td>
+		<td class = "DCCrowdetail" id="slotT11">0000</td>
+		<td class = "DCCrowdetail" id="slotT12">0000</td>
+		<td class = "DCCrowdetail" id="slotT13">0000</td>
+		<td class = "DCCrowdetail" id="slotT14">0000</td>
+		<td class = "DCCrowdetail" id="slotT15">0000</td>
+		<td class = "DCCrowdetail" id="slotT16">0000</td>	
+		<td class = "DCCrowdetail" id="slotT17">0000</td>
+		<td class = "DCCrowdetail" id="slotT18">0000</td>
+		<td class = "DCCrowdetail" id="slotT19">0000</td>				
+	</tr>
+	
+	<tr class="DCCdatarow">
+		<td id="SCTcode1">Slot speed:</td>			
+		<td id="DCCspd1">00</td>
+		<td id="DCCspd2">00</td>
+		<td id="DCCspd3">00</td>
+		<td id="DCCspd4">00</td>
+		<td id="DCCspd5">00</td>
+		<td id="DCCspd6">00</td>
+		<td id="DCCspd7">00</td>
+		<td id="DCCspd8">00</td>
+		<td id="DCCspd9">00</td>
+		<td id="DCCspd10">00</td>
+		<td id="DCCspd11">00</td>
+		<td id="DCCspd12">00</td>	
+		<td id="DCCspd13">00</td>
+		<td id="DCCspd14">00</td>
+		<td id="DCCspd15">00</td>
+		<td id="DCCspd16">00</td>
+		<td id="DCCspd17">00</td>
+		<td id="DCCspd18">00</td>
+		<td id="DCCspd19">00</td>					
+	</tr>
+	
+	<tr class="DCCdatarow">
+		<td id="SCTcode1">Slot Direction:</td>			
+		<td id="DCCDir1">0</td>
+		<td id="DCCDir2">0</td>
+		<td id="DCCDir3">0</td>
+		<td id="DCCDir4">0</td>	
+		<td id="DCCDir5">0</td>
+		<td id="DCCDir6">0</td>
+		<td id="DCCDir7">0</td>
+		<td id="DCCDir8">0</td>	
+		<td id="DCCDir9">0</td>
+		<td id="DCCDir10">0</td>
+		<td id="DCCDir11">0</td>
+		<td id="DCCDir12">0</td>		
+		<td id="DCCDir13">0</td>
+		<td id="DCCDir14">0</td>
+		<td id="DCCDir15">0</td>
+		<td id="DCCDir16">0</td>
+		<td id="DCCDir17">0</td>
+		<td id="DCCDir18">0</td>
+		<td id="DCCDir19">0</td>							
+	</tr>
+	
+	</table>
+</div>
+
+<div id="Locomessages">
+<tr class="separator" />
+<div id="LRCOS"> Loco Running process overall status </div>
+
+<div id="LRC1"> Loco 1 run status </div>
+
+<div id="LRC2"> Loco 2 run status </div>		
+<div id="LRC3"> Loco 3 run status </div>
+<div id="LRC4"> Loco 4 run status </div>		
+<div id="LRC5"> Loco 5 run status </div>
+<div id="LRC6"> Loco 6 run status </div>		
+</div>
+
+<div id="PIstatuspt1">
+<tr class="separator" />
+<div id="SPHDR"> PS interface </div>
+<tr class="separator" />
+<div id="PI1"> Bytes read </div>
+<tr class="separator" />
+<div id="PI2"> Section Entries </div>
+<tr class="separator" />		
+<div id="PI3"> Section Exits </div>	
+</div>
+<div id="PIstatuspt2">
+<button onclick="PIReset(2)">Buffer reset</button>
+</div>
+<div id="PIstatuspt3">
+<tr class="separator" />
+<div id="SPHDR">   </div>
+<tr class="separator" />
+<div id="PIBread">0000</div>
+<tr class="separator" />
+<div id="PIEntries">0000</div>
+<tr class="separator" />		
+<div id="PIExits">0000</div>
+</div>
+<div id="PIstatuspt4">
+<button onclick="PIReset(1)">Counters reset</button>
+</div>
+
+<div id="Lsectionstatus">
+	<h3>Logical Section status</h3>
+<table id="LSectiontable">
+<tr class="LSectiondatarowheader">
+	<td class="LSdataheader" id="LS-LShdr1">001</td>
+	<td class="LSdataheader" id="LS-LShdr2">002</td>
+	<td class="LSdataheader" id="LS-LShdr3">003</td>
+	<td class="LSdataheader" id="LS-LShdr4">004</td>
+	<td class="LSdataheader" id="LS-LShdr5">005</td>
+	<td class="LSdataheader" id="LS-LShdr6">006</td>
+	<td class="LSdataheader" id="LS-LShdr7">007</td>
+	<td class="LSdataheader" id="LS-LShdr8">008</td>
+	<td class="LSdataheader" id="LS-LShdr9">009</td>
+	<td class="LSdataheader" id="LS-LShdr10">010</td>
+	<td class="LSdataheader" id="LS-LShdr11">011</td>
+	<td class="LSdataheader" id="LS-LShdr12">012</td>
+	<td class="LSdataheader" id="LS-LShdr13">013</td>
+	<td class="LSdataheader" id="LS-LShdr14">014</td>
+	<td class="LSdataheader" id="LS-LShdr15">015</td>
+	<td class="LSdataheader" id="LS-LShdr16">016</td>
+	<td class="LSdataheader" id="LS-LShdr17">017</td>
+	<td class="LSdataheader" id="LS-LShdr18">018</td>
+	<td class="LSdataheader" id="LS-LShdr19">019</td>
+	<td class="LSdataheader" id="LS-LShdr20">020</td>
+</tr>
+<tr class="LSectiondatarowline">
+	<td class="LSdataline" id="LS-LSlr1">0000</td>
+	<td class="LSdataline" id="LS-LSlr2">0000</td>
+	<td class="LSdataline" id="LS-LSlr3">0000</td>
+	<td class="LSdataline" id="LS-LSlr4">0000</td>
+	<td class="LSdataline" id="LS-LSlr5">0000</td>
+	<td class="LSdataline" id="LS-LSlr6">0000</td>
+	<td class="LSdataline" id="LS-LSlr7">0000</td>
+	<td class="LSdataline" id="LS-LSlr8">0000</td>
+	<td class="LSdataline" id="LS-LSlr9">0000</td>
+	<td class="LSdataline" id="LS-LSlr10">0000</td>
+	<td class="LSdataline" id="LS-LSlr11">0000</td>
+	<td class="LSdataline" id="LS-LSlr12">0000</td>
+	<td class="LSdataline" id="LS-LSlr13">0000</td>
+	<td class="LSdataline" id="LS-LSlr14">0000</td>
+	<td class="LSdataline" id="LS-LSlr15">0000</td>
+	<td class="LSdataline" id="LS-LSlr16">0000</td>
+	<td class="LSdataline" id="LS-LSlr17">0000</td>
+	<td class="LSdataline" id="LS-LSlr18">0000</td>
+	<td class="LSdataline" id="LS-LSlr19">0000</td>
+	<td class="LSdataline" id="LS-LSlr20">0000</td>
+</tr>
+<tr class="LSectiondatarowheader">
+	<td class="LSdataheader" id="LS-LShdr21">021</td>
+	<td class="LSdataheader" id="LS-LShdr22">022</td>
+	<td class="LSdataheader" id="LS-LShdr23">023</td>
+	<td class="LSdataheader" id="LS-LShdr24">024</td>
+	<td class="LSdataheader" id="LS-LShdr25">025</td>
+	<td class="LSdataheader" id="LS-LShdr26">026</td>
+	<td class="LSdataheader" id="LS-LShdr27">027</td>
+	<td class="LSdataheader" id="LS-LShdr28">028</td>
+	<td class="LSdataheader" id="LS-LShdr29">029</td>
+	<td class="LSdataheader" id="LS-LShdr30">030</td>
+	<td class="LSdataheader" id="LS-LShdr31">031</td>
+	<td class="LSdataheader" id="LS-LShdr32">032</td>
+	<td class="LSdataheader" id="LS-LShdr33">033</td>
+	<td class="LSdataheader" id="LS-LShdr34">034</td>
+	<td class="LSdataheader" id="LS-LShdr35">035</td>
+	<td class="LSdataheader" id="LS-LShdr36">036</td>
+	<td class="LSdataheader" id="LS-LShdr37">037</td>
+	<td class="LSdataheader" id="LS-LShdr38">038</td>
+	<td class="LSdataheader" id="LS-LShdr39">039</td>
+	<td class="LSdataheader" id="LS-LShdr40">040</td>
+</tr>
+<tr class="LSectiondatarowline">
+	<td class="LSdataline" id="LS-LSlr21">0000</td>
+	<td class="LSdataline" id="LS-LSlr22">0000</td>
+	<td class="LSdataline" id="LS-LSlr23">0000</td>
+	<td class="LSdataline" id="LS-LSlr24">0000</td>
+	<td class="LSdataline" id="LS-LSlr25">0000</td>
+	<td class="LSdataline" id="LS-LSlr26">0000</td>
+	<td class="LSdataline" id="LS-LSlr27">0000</td>
+	<td class="LSdataline" id="LS-LSlr28">0000</td>
+	<td class="LSdataline" id="LS-LSlr29">0000</td>
+	<td class="LSdataline" id="LS-LSlr30">0000</td>
+	<td class="LSdataline" id="LS-LSlr31">0000</td>
+	<td class="LSdataline" id="LS-LSlr32">0000</td>
+	<td class="LSdataline" id="LS-LSlr33">0000</td>
+	<td class="LSdataline" id="LS-LSlr34">0000</td>
+	<td class="LSdataline" id="LS-LSlr35">0000</td>
+	<td class="LSdataline" id="LS-LSlr36">0000</td>
+	<td class="LSdataline" id="LS-LSlr37">0000</td>
+	<td class="LSdataline" id="LS-LSlr38">0000</td>
+	<td class="LSdataline" id="LS-LSlr39">0000</td>
+	<td class="LSdataline" id="LS-LSlr40">0000</td>
+</tr>
+<tr class="LSectiondatarowheader">
+	<td class="LSdataheader" id="LS-LShdr41">041</td>
+	<td class="LSdataheader" id="LS-LShdr42">042</td>
+	<td class="LSdataheader" id="LS-LShdr43">043</td>
+	<td class="LSdataheader" id="LS-LShdr44">044</td>
+	<td class="LSdataheader" id="LS-LShdr45">045</td>
+	<td class="LSdataheader" id="LS-LShdr46">046</td>
+	<td class="LSdataheader" id="LS-LShdr47">047</td>
+	<td class="LSdataheader" id="LS-LShdr48">048</td>
+	<td class="LSdataheader" id="LS-LShdr49">049</td>
+	<td class="LSdataheader" id="LS-LShdr50">050</td>
+	<td class="LSdataheader" id="LS-LShdr51">051</td>
+	<td class="LSdataheader" id="LS-LShdr52">052</td>
+	<td class="LSdataheader" id="LS-LShdr53">053</td>
+	<td class="LSdataheader" id="LS-LShdr54">054</td>
+	<td class="LSdataheader" id="LS-LShdr55">055</td>
+	<td class="LSdataheader" id="LS-LShdr56">056</td>
+	<td class="LSdataheader" id="LS-LShdr57">057</td>
+	<td class="LSdataheader" id="LS-LShdr58">058</td>
+	<td class="LSdataheader" id="LS-LShdr59">059</td>
+	<td class="LSdataheader" id="LS-LShdr60">060</td>
+</tr>
+<tr class="LSectiondatarowline">
+	<td class="LSdataline" id="LS-LSlr41">0000</td>
+	<td class="LSdataline" id="LS-LSlr42">0000</td>
+	<td class="LSdataline" id="LS-LSlr43">0000</td>
+	<td class="LSdataline" id="LS-LSlr44">0000</td>
+	<td class="LSdataline" id="LS-LSlr45">0000</td>
+	<td class="LSdataline" id="LS-LSlr46">0000</td>
+	<td class="LSdataline" id="LS-LSlr47">0000</td>
+	<td class="LSdataline" id="LS-LSlr48">0000</td>
+	<td class="LSdataline" id="LS-LSlr49">0000</td>
+	<td class="LSdataline" id="LS-LSlr50">0000</td>
+	<td class="LSdataline" id="LS-LSlr51">0000</td>
+	<td class="LSdataline" id="LS-LSlr52">0000</td>
+	<td class="LSdataline" id="LS-LSlr53">0000</td>
+	<td class="LSdataline" id="LS-LSlr54">0000</td>
+	<td class="LSdataline" id="LS-LSlr55">0000</td>
+	<td class="LSdataline" id="LS-LSlr56">0000</td>
+	<td class="LSdataline" id="LS-LSlr57">0000</td>
+	<td class="LSdataline" id="LS-LSlr58">0000</td>
+	<td class="LSdataline" id="LS-LSlr59">0000</td>
+	<td class="LSdataline" id="LS-LSlr60">0000</td>
+</tr>
+<tr class="LSectiondatarowheader">
+	<td class="LSdataheader" id="LS-LShdr61">061</td>
+	<td class="LSdataheader" id="LS-LShdr62">062</td>
+	<td class="LSdataheader" id="LS-LShdr63">063</td>
+	<td class="LSdataheader" id="LS-LShdr64">064</td>
+	<td class="LSdataheader" id="LS-LShdr65">065</td>
+	<td class="LSdataheader" id="LS-LShdr66">066</td>
+	<td class="LSdataheader" id="LS-LShdr67">067</td>
+	<td class="LSdataheader" id="LS-LShdr68">068</td>
+	<td class="LSdataheader" id="LS-LShdr69">069</td>
+	<td class="LSdataheader" id="LS-LShdr70">070</td>
+	<td class="LSdataheader" id="LS-LShdr71">071</td>
+	<td class="LSdataheader" id="LS-LShdr72">072</td>
+	<td class="LSdataheader" id="LS-LShdr73">073</td>
+	<td class="LSdataheader" id="LS-LShdr74">074</td>
+	<td class="LSdataheader" id="LS-LShdr75">075</td>
+	<td class="LSdataheader" id="LS-LShdr76">076</td>
+	<td class="LSdataheader" id="LS-LShdr77">077</td>
+	<td class="LSdataheader" id="LS-LShdr78">078</td>
+	<td class="LSdataheader" id="LS-LShdr79">079</td>
+	<td class="LSdataheader" id="LS-LShdr80">080</td>
+</tr>
+<tr class="LSectiondatarowline">
+	<td class="LSdataline" id="LS-LSlr61">0000</td>
+	<td class="LSdataline" id="LS-LSlr62">0000</td>
+	<td class="LSdataline" id="LS-LSlr63">0000</td>
+	<td class="LSdataline" id="LS-LSlr64">0000</td>
+	<td class="LSdataline" id="LS-LSlr65">0000</td>
+	<td class="LSdataline" id="LS-LSlr66">0000</td>
+	<td class="LSdataline" id="LS-LSlr67">0000</td>
+	<td class="LSdataline" id="LS-LSlr68">0000</td>
+	<td class="LSdataline" id="LS-LSlr69">0000</td>
+	<td class="LSdataline" id="LS-LSlr70">0000</td>
+	<td class="LSdataline" id="LS-LSlr71">0000</td>
+	<td class="LSdataline" id="LS-LSlr72">0000</td>
+	<td class="LSdataline" id="LS-LSlr73">0000</td>
+	<td class="LSdataline" id="LS-LSlr74">0000</td>
+	<td class="LSdataline" id="LS-LSlr75">0000</td>
+	<td class="LSdataline" id="LS-LSlr76">0000</td>
+	<td class="LSdataline" id="LS-LSlr77">0000</td>
+	<td class="LSdataline" id="LS-LSlr78">0000</td>
+	<td class="LSdataline" id="LS-LSlr79">0000</td>
+	<td class="LSdataline" id="LS-LSlr80">0000</td>
+</tr>
+<tr class="LSectiondatarowheader">
+	<td class="LSdataheader" id="LS-LShdr81">081</td>
+	<td class="LSdataheader" id="LS-LShdr82">082</td>
+	<td class="LSdataheader" id="LS-LShdr83">083</td>
+	<td class="LSdataheader" id="LS-LShdr84">084</td>
+	<td class="LSdataheader" id="LS-LShdr85">085</td>
+	<td class="LSdataheader" id="LS-LShdr86">086</td>
+	<td class="LSdataheader" id="LS-LShdr87">087</td>
+	<td class="LSdataheader" id="LS-LShdr88">088</td>
+	<td class="LSdataheader" id="LS-LShdr89">089</td>
+	<td class="LSdataheader" id="LS-LShdr90">090</td>
+	<td class="LSdataheader" id="LS-LShdr91">091</td>
+	<td class="LSdataheader" id="LS-LShdr92">092</td>
+	<td class="LSdataheader" id="LS-LShdr93">093</td>
+	<td class="LSdataheader" id="LS-LShdr94">094</td>
+	<td class="LSdataheader" id="LS-LShdr95">095</td>
+	<td class="LSdataheader" id="LS-LShdr96">096</td>
+	<td class="LSdataheader" id="LS-LShdr97">097</td>
+	<td class="LSdataheader" id="LS-LShdr98">098</td>
+	<td class="LSdataheader" id="LS-LShdr99">099</td>
+	<td class="LSdataheader" id="LS-LShdr100">100</td>
+</tr>
+<tr class="LSectiondatarowline">
+	<td class="LSdataline" id="LS-LSlr81">0000</td>
+	<td class="LSdataline" id="LS-LSlr82">0000</td>
+	<td class="LSdataline" id="LS-LSlr83">0000</td>
+	<td class="LSdataline" id="LS-LSlr84">0000</td>
+	<td class="LSdataline" id="LS-LSlr85">0000</td>
+	<td class="LSdataline" id="LS-LSlr86">0000</td>
+	<td class="LSdataline" id="LS-LSlr87">0000</td>
+	<td class="LSdataline" id="LS-LSlr88">0000</td>
+	<td class="LSdataline" id="LS-LSlr89">0000</td>
+	<td class="LSdataline" id="LS-LSlr90">0000</td>
+	<td class="LSdataline" id="LS-LSlr91">0000</td>
+	<td class="LSdataline" id="LS-LSlr92">0000</td>
+	<td class="LSdataline" id="LS-LSlr93">0000</td>
+	<td class="LSdataline" id="LS-LSlr94">0000</td>
+	<td class="LSdataline" id="LS-LSlr95">0000</td>
+	<td class="LSdataline" id="LS-LSlr96">0000</td>
+	<td class="LSdataline" id="LS-LSlr97">0000</td>
+	<td class="LSdataline" id="LS-LSlr98">0000</td>
+	<td class="LSdataline" id="LS-LSlr99">0000</td>
+	<td class="LSdataline" id="LS-LSlr100">0000</td>
+</tr>
+<tr class="LSectiondatarowheader">
+	<td class="LSdataheader" id="LS-LShdr101">101</td>
+	<td class="LSdataheader" id="LS-LShdr102">102</td>
+	<td class="LSdataheader" id="LS-LShdr103">103</td>
+	<td class="LSdataheader" id="LS-LShdr104">104</td>
+	<td class="LSdataheader" id="LS-LShdr105">105</td>
+	<td class="LSdataheader" id="LS-LShdr106">106</td>
+	<td class="LSdataheader" id="LS-LShdr107">107</td>
+	<td class="LSdataheader" id="LS-LShdr108">108</td>
+	<td class="LSdataheader" id="LS-LShdr109">109</td>
+	<td class="LSdataheader" id="LS-LShdr110">110</td>
+	<td class="LSdataheader" id="LS-LShdr111">111</td>
+	<td class="LSdataheader" id="LS-LShdr112">112</td>
+	<td class="LSdataheader" id="LS-LShdr113">113</td>
+	<td class="LSdataheader" id="LS-LShdr114">114</td>
+	<td class="LSdataheader" id="LS-LShdr115">115</td>
+	<td class="LSdataheader" id="LS-LShdr116">116</td>
+	<td class="LSdataheader" id="LS-LShdr117">117</td>
+	<td class="LSdataheader" id="LS-LShdr118">118</td>
+	<td class="LSdataheader" id="LS-LShdr119">119</td>
+	<td class="LSdataheader" id="LS-LShdr120">120</td>
+</tr>
+<tr class="LSectiondatarowline">
+	<td class="LSdataline" id="LS-LSlr101">0000</td>
+	<td class="LSdataline" id="LS-LSlr102">0000</td>
+	<td class="LSdataline" id="LS-LSlr103">0000</td>
+	<td class="LSdataline" id="LS-LSlr104">0000</td>
+	<td class="LSdataline" id="LS-LSlr105">0000</td>
+	<td class="LSdataline" id="LS-LSlr106">0000</td>
+	<td class="LSdataline" id="LS-LSlr107">0000</td>
+	<td class="LSdataline" id="LS-LSlr108">0000</td>
+	<td class="LSdataline" id="LS-LSlr109">0000</td>
+	<td class="LSdataline" id="LS-LSlr110">0000</td>
+	<td class="LSdataline" id="LS-LSlr111">0000</td>
+	<td class="LSdataline" id="LS-LSlr112">0000</td>
+	<td class="LSdataline" id="LS-LSlr113">0000</td>
+	<td class="LSdataline" id="LS-LSlr114">0000</td>
+	<td class="LSdataline" id="LS-LSlr115">0000</td>
+	<td class="LSdataline" id="LS-LSlr116">0000</td>
+	<td class="LSdataline" id="LS-LSlr117">0000</td>
+	<td class="LSdataline" id="LS-LSlr118">0000</td>
+	<td class="LSdataline" id="LS-LSlr119">0000</td>
+	<td class="LSdataline" id="LS-LSlr120">0000</td>
+</tr>
+<tr class="LSectiondatarowheader">
+	<td class="LSdataheader" id="LS-LShdr121">121</td>
+	<td class="LSdataheader" id="LS-LShdr122">122</td>
+	<td class="LSdataheader" id="LS-LShdr123">123</td>
+	<td class="LSdataheader" id="LS-LShdr124">124</td>
+	<td class="LSdataheader" id="LS-LShdr125">125</td>
+	<td class="LSdataheader" id="LS-LShdr126">126</td>
+	<td class="LSdataheader" id="LS-LShdr127">127</td>
+	<td class="LSdataheader" id="LS-LShdr128">128</td>
+	<td class="LSdataheader" id="LS-LShdr129">129</td>
+	<td class="LSdataheader" id="LS-LShdr130">130</td>
+	<td class="LSdataheader" id="LS-LShdr131">131</td>
+	<td class="LSdataheader" id="LS-LShdr132">132</td>
+	<td class="LSdataheader" id="LS-LShdr133">133</td>
+	<td class="LSdataheader" id="LS-LShdr134">134</td>
+	<td class="LSdataheader" id="LS-LShdr135">135</td>
+	<td class="LSdataheader" id="LS-LShdr136">136</td>
+	<td class="LSdataheader" id="LS-LShdr137">137</td>
+	<td class="LSdataheader" id="LS-LShdr138">138</td>
+	<td class="LSdataheader" id="LS-LShdr139">139</td>
+	<td class="LSdataheader" id="LS-LShdr140">140</td>
+</tr>
+<tr class="LSectiondatarowline">
+	<td class="LSdataline" id="LS-LSlr121">0000</td>
+	<td class="LSdataline" id="LS-LSlr122">0000</td>
+	<td class="LSdataline" id="LS-LSlr123">0000</td>
+	<td class="LSdataline" id="LS-LSlr124">0000</td>
+	<td class="LSdataline" id="LS-LSlr125">0000</td>
+	<td class="LSdataline" id="LS-LSlr126">0000</td>
+	<td class="LSdataline" id="LS-LSlr127">0000</td>
+	<td class="LSdataline" id="LS-LSlr128">0000</td>
+	<td class="LSdataline" id="LS-LSlr129">0000</td>
+	<td class="LSdataline" id="LS-LSlr130">0000</td>
+	<td class="LSdataline" id="LS-LSlr131">0000</td>
+	<td class="LSdataline" id="LS-LSlr132">0000</td>
+	<td class="LSdataline" id="LS-LSlr133">0000</td>
+	<td class="LSdataline" id="LS-LSlr134">0000</td>
+	<td class="LSdataline" id="LS-LSlr135">0000</td>
+	<td class="LSdataline" id="LS-LSlr136">0000</td>
+	<td class="LSdataline" id="LS-LSlr137">0000</td>
+	<td class="LSdataline" id="LS-LSlr138">0000</td>
+	<td class="LSdataline" id="LS-LSlr139">0000</td>
+	<td class="LSdataline" id="LS-LSlr140">0000</td>
+</tr>
+<tr class="LSectiondatarowheader">
+	<td class="LSdataheader" id="LS-LShdr141">141</td>
+	<td class="LSdataheader" id="LS-LShdr142">142</td>
+	<td class="LSdataheader" id="LS-LShdr143">143</td>
+	<td class="LSdataheader" id="LS-LShdr144">144</td>
+	<td class="LSdataheader" id="LS-LShdr145">145</td>
+	<td class="LSdataheader" id="LS-LShdr146">146</td>
+	<td class="LSdataheader" id="LS-LShdr147">147</td>
+	<td class="LSdataheader" id="LS-LShdr148">148</td>
+	<td class="LSdataheader" id="LS-LShdr149">149</td>
+	<td class="LSdataheader" id="LS-LShdr150">150</td>
+	<td class="LSdataheader" id="LS-LShdr151">151</td>
+	<td class="LSdataheader" id="LS-LShdr152">152</td>
+	<td class="LSdataheader" id="LS-LShdr153">153</td>
+	<td class="LSdataheader" id="LS-LShdr154">154</td>
+	<td class="LSdataheader" id="LS-LShdr155">155</td>
+	<td class="LSdataheader" id="LS-LShdr156">156</td>
+	<td class="LSdataheader" id="LS-LShdr157">157</td>
+	<td class="LSdataheader" id="LS-LShdr158">158</td>
+	<td class="LSdataheader" id="LS-LShdr159">159</td>
+	<td class="LSdataheader" id="LS-LShdr160">160</td>
+</tr>
+<tr class="LSectiondatarowline">
+	<td class="LSdataline" id="LS-LSlr141">0000</td>
+	<td class="LSdataline" id="LS-LSlr142">0000</td>
+	<td class="LSdataline" id="LS-LSlr143">0000</td>
+	<td class="LSdataline" id="LS-LSlr144">0000</td>
+	<td class="LSdataline" id="LS-LSlr145">0000</td>
+	<td class="LSdataline" id="LS-LSlr146">0000</td>
+	<td class="LSdataline" id="LS-LSlr147">0000</td>
+	<td class="LSdataline" id="LS-LSlr148">0000</td>
+	<td class="LSdataline" id="LS-LSlr149">0000</td>
+	<td class="LSdataline" id="LS-LSlr150">0000</td>
+	<td class="LSdataline" id="LS-LSlr151">0000</td>
+	<td class="LSdataline" id="LS-LSlr152">0000</td>
+	<td class="LSdataline" id="LS-LSlr153">0000</td>
+	<td class="LSdataline" id="LS-LSlr154">0000</td>
+	<td class="LSdataline" id="LS-LSlr155">0000</td>
+	<td class="LSdataline" id="LS-LSlr156">0000</td>
+	<td class="LSdataline" id="LS-LSlr157">0000</td>
+	<td class="LSdataline" id="LS-LSlr158">0000</td>
+	<td class="LSdataline" id="LS-LSlr159">0000</td>
+	<td class="LSdataline" id="LS-LSlr160">0000</td>
+</tr>
+<tr class="LSectiondatarowheader">
+	<td class="LSdataheader" id="LS-LShdr161">161</td>
+	<td class="LSdataheader" id="LS-LShdr162">162</td>
+	<td class="LSdataheader" id="LS-LShdr163">163</td>
+	<td class="LSdataheader" id="LS-LShdr164">164</td>
+	<td class="LSdataheader" id="LS-LShdr165">165</td>
+	<td class="LSdataheader" id="LS-LShdr166">166</td>
+	<td class="LSdataheader" id="LS-LShdr167">167</td>
+	<td class="LSdataheader" id="LS-LShdr168">168</td>
+	<td class="LSdataheader" id="LS-LShdr169">169</td>
+	<td class="LSdataheader" id="LS-LShdr170">170</td>
+	<td class="LSdataheader" id="LS-LShdr171">171</td>
+	<td class="LSdataheader" id="LS-LShdr172">172</td>
+	<td class="LSdataheader" id="LS-LShdr173">173</td>
+	<td class="LSdataheader" id="LS-LShdr174">174</td>
+	<td class="LSdataheader" id="LS-LShdr175">175</td>
+	<td class="LSdataheader" id="LS-LShdr176">176</td>
+	<td class="LSdataheader" id="LS-LShdr177">177</td>
+	<td class="LSdataheader" id="LS-LShdr178">178</td>
+	<td class="LSdataheader" id="LS-LShdr179">179</td>
+	<td class="LSdataheader" id="LS-LShdr180">180</td>
+</tr>
+<tr class="LSectiondatarowline">
+	<td class="LSdataline" id="LS-LSlr161">0000</td>
+	<td class="LSdataline" id="LS-LSlr162">0000</td>
+	<td class="LSdataline" id="LS-LSlr163">0000</td>
+	<td class="LSdataline" id="LS-LSlr164">0000</td>
+	<td class="LSdataline" id="LS-LSlr165">0000</td>
+	<td class="LSdataline" id="LS-LSlr166">0000</td>
+	<td class="LSdataline" id="LS-LSlr167">0000</td>
+	<td class="LSdataline" id="LS-LSlr168">0000</td>
+	<td class="LSdataline" id="LS-LSlr169">0000</td>
+	<td class="LSdataline" id="LS-LSlr170">0000</td>
+	<td class="LSdataline" id="LS-LSlr171">0000</td>
+	<td class="LSdataline" id="LS-LSlr172">0000</td>
+	<td class="LSdataline" id="LS-LSlr173">0000</td>
+	<td class="LSdataline" id="LS-LSlr174">0000</td>
+	<td class="LSdataline" id="LS-LSlr175">0000</td>
+	<td class="LSdataline" id="LS-LSlr176">0000</td>
+	<td class="LSdataline" id="LS-LSlr177">0000</td>
+	<td class="LSdataline" id="LS-LSlr178">0000</td>
+	<td class="LSdataline" id="LS-LSlr179">0000</td>
+	<td class="LSdataline" id="LS-LSlr180">0000</td>
+</tr>
+<tr class="LSectiondatarowheader">
+	<td class="LSdataheader" id="LS-LShdr181">181</td>
+	<td class="LSdataheader" id="LS-LShdr182">182</td>
+	<td class="LSdataheader" id="LS-LShdr183">183</td>
+	<td class="LSdataheader" id="LS-LShdr184">184</td>
+	<td class="LSdataheader" id="LS-LShdr185">185</td>
+	<td class="LSdataheader" id="LS-LShdr186">186</td>
+	<td class="LSdataheader" id="LS-LShdr187">187</td>
+	<td class="LSdataheader" id="LS-LShdr188">188</td>
+	<td class="LSdataheader" id="LS-LShdr189">189</td>
+	<td class="LSdataheader" id="LS-LShdr190">190</td>
+	<td class="LSdataheader" id="LS-LShdr191">191</td>
+	<td class="LSdataheader" id="LS-LShdr192">192</td>
+	<td class="LSdataheader" id="LS-LShdr193">193</td>
+	<td class="LSdataheader" id="LS-LShdr194">194</td>
+	<td class="LSdataheader" id="LS-LShdr195">195</td>
+	<td class="LSdataheader" id="LS-LShdr196">196</td>
+	<td class="LSdataheader" id="LS-LShdr197">197</td>
+	<td class="LSdataheader" id="LS-LShdr198">198</td>
+	<td class="LSdataheader" id="LS-LShdr199">199</td>
+	<td class="LSdataheader" id="LS-LShdr200">200</td>
+</tr>
+<tr class="LSectiondatarowline">
+	<td class="LSdataline" id="LS-LSlr181">0000</td>
+	<td class="LSdataline" id="LS-LSlr182">0000</td>
+	<td class="LSdataline" id="LS-LSlr183">0000</td>
+	<td class="LSdataline" id="LS-LSlr184">0000</td>
+	<td class="LSdataline" id="LS-LSlr185">0000</td>
+	<td class="LSdataline" id="LS-LSlr186">0000</td>
+	<td class="LSdataline" id="LS-LSlr187">0000</td>
+	<td class="LSdataline" id="LS-LSlr188">0000</td>
+	<td class="LSdataline" id="LS-LSlr189">0000</td>
+	<td class="LSdataline" id="LS-LSlr190">0000</td>
+	<td class="LSdataline" id="LS-LSlr191">0000</td>
+	<td class="LSdataline" id="LS-LSlr192">0000</td>
+	<td class="LSdataline" id="LS-LSlr193">0000</td>
+	<td class="LSdataline" id="LS-LSlr194">0000</td>
+	<td class="LSdataline" id="LS-LSlr195">0000</td>
+	<td class="LSdataline" id="LS-LSlr196">0000</td>
+	<td class="LSdataline" id="LS-LSlr197">0000</td>
+	<td class="LSdataline" id="LS-LSlr198">0000</td>
+	<td class="LSdataline" id="LS-LSlr199">0000</td>
+	<td class="LSdataline" id="LS-LSlr200">0000</td>
+</tr>
+<tr class="LSectiondatarowheader">
+	<td class="LSdataheader" id="LS-LShdr201">201</td>
+	<td class="LSdataheader" id="LS-LShdr202">202</td>
+	<td class="LSdataheader" id="LS-LShdr203">203</td>
+	<td class="LSdataheader" id="LS-LShdr204">204</td>
+	<td class="LSdataheader" id="LS-LShdr205">205</td>
+	<td class="LSdataheader" id="LS-LShdr206">206</td>
+	<td class="LSdataheader" id="LS-LShdr207">207</td>
+	<td class="LSdataheader" id="LS-LShdr208">208</td>
+	<td class="LSdataheader" id="LS-LShdr209">209</td>
+	<td class="LSdataheader" id="LS-LShdr210">210</td>
+	<td class="LSdataheader" id="LS-LShdr211">211</td>
+	<td class="LSdataheader" id="LS-LShdr212">212</td>
+	<td class="LSdataheader" id="LS-LShdr213">213</td>
+	<td class="LSdataheader" id="LS-LShdr214">214</td>
+	<td class="LSdataheader" id="LS-LShdr215">215</td>
+	<td class="LSdataheader" id="LS-LShdr216">216</td>
+	<td class="LSdataheader" id="LS-LShdr217">217</td>
+	<td class="LSdataheader" id="LS-LShdr218">218</td>
+	<td class="LSdataheader" id="LS-LShdr219">219</td>
+	<td class="LSdataheader" id="LS-LShdr220">220</td>
+</tr>
+<tr class="LSectiondatarowline">
+	<td class="LSdataline" id="LS-LSlr201">0000</td>
+	<td class="LSdataline" id="LS-LSlr202">0000</td>
+	<td class="LSdataline" id="LS-LSlr203">0000</td>
+	<td class="LSdataline" id="LS-LSlr204">0000</td>
+	<td class="LSdataline" id="LS-LSlr205">0000</td>
+	<td class="LSdataline" id="LS-LSlr206">0000</td>
+	<td class="LSdataline" id="LS-LSlr207">0000</td>
+	<td class="LSdataline" id="LS-LSlr208">0000</td>
+	<td class="LSdataline" id="LS-LSlr209">0000</td>
+	<td class="LSdataline" id="LS-LSlr210">0000</td>
+	<td class="LSdataline" id="LS-LSlr211">0000</td>
+	<td class="LSdataline" id="LS-LSlr212">0000</td>
+	<td class="LSdataline" id="LS-LSlr213">0000</td>
+	<td class="LSdataline" id="LS-LSlr214">0000</td>
+	<td class="LSdataline" id="LS-LSlr215">0000</td>
+	<td class="LSdataline" id="LS-LSlr216">0000</td>
+	<td class="LSdataline" id="LS-LSlr217">0000</td>
+	<td class="LSdataline" id="LS-LSlr218">0000</td>
+	<td class="LSdataline" id="LS-LSlr219">0000</td>
+	<td class="LSdataline" id="LS-LSlr220">0000</td>
+</tr>
+<tr class="LSectiondatarowheader">
+	<td class="LSdataheader" id="LS-LShdr221">221</td>
+	<td class="LSdataheader" id="LS-LShdr222">222</td>
+	<td class="LSdataheader" id="LS-LShdr223">223</td>
+	<td class="LSdataheader" id="LS-LShdr224">224</td>
+	<td class="LSdataheader" id="LS-LShdr225">225</td>
+	<td class="LSdataheader" id="LS-LShdr226">226</td>
+	<td class="LSdataheader" id="LS-LShdr227">227</td>
+	<td class="LSdataheader" id="LS-LShdr228">228</td>
+	<td class="LSdataheader" id="LS-LShdr229">229</td>
+	<td class="LSdataheader" id="LS-LShdr230">230</td>
+	<td class="LSdataheader" id="LS-LShdr231">231</td>
+	<td class="LSdataheader" id="LS-LShdr232">232</td>
+	<td class="LSdataheader" id="LS-LShdr233">233</td>
+	<td class="LSdataheader" id="LS-LShdr234">234</td>
+	<td class="LSdataheader" id="LS-LShdr235">235</td>
+	<td class="LSdataheader" id="LS-LShdr236">236</td>
+	<td class="LSdataheader" id="LS-LShdr237">237</td>
+	<td class="LSdataheader" id="LS-LShdr238">238</td>
+	<td class="LSdataheader" id="LS-LShdr239">239</td>
+	<td class="LSdataheader" id="LS-LShdr240">240</td>
+</tr>
+<tr class="LSectiondatarowline">
+	<td class="LSdataline" id="LS-LSlr221">0000</td>
+	<td class="LSdataline" id="LS-LSlr222">0000</td>
+	<td class="LSdataline" id="LS-LSlr223">0000</td>
+	<td class="LSdataline" id="LS-LSlr224">0000</td>
+	<td class="LSdataline" id="LS-LSlr225">0000</td>
+	<td class="LSdataline" id="LS-LSlr226">0000</td>
+	<td class="LSdataline" id="LS-LSlr227">0000</td>
+	<td class="LSdataline" id="LS-LSlr228">0000</td>
+	<td class="LSdataline" id="LS-LSlr229">0000</td>
+	<td class="LSdataline" id="LS-LSlr230">0000</td>
+	<td class="LSdataline" id="LS-LSlr231">0000</td>
+	<td class="LSdataline" id="LS-LSlr232">0000</td>
+	<td class="LSdataline" id="LS-LSlr233">0000</td>
+	<td class="LSdataline" id="LS-LSlr234">0000</td>
+	<td class="LSdataline" id="LS-LSlr235">0000</td>
+	<td class="LSdataline" id="LS-LSlr236">0000</td>
+	<td class="LSdataline" id="LS-LSlr237">0000</td>
+	<td class="LSdataline" id="LS-LSlr238">0000</td>
+	<td class="LSdataline" id="LS-LSlr239">0000</td>
+	<td class="LSdataline" id="LS-LSlr240">0000</td>
+</tr>
+<tr class="LSectiondatarowheader">
+	<td class="LSdataheader" id="LS-LShdr241">241</td>
+	<td class="LSdataheader" id="LS-LShdr242">242</td>
+	<td class="LSdataheader" id="LS-LShdr243">243</td>
+	<td class="LSdataheader" id="LS-LShdr244">244</td>
+	<td class="LSdataheader" id="LS-LShdr245">245</td>
+	<td class="LSdataheader" id="LS-LShdr246">246</td>
+	<td class="LSdataheader" id="LS-LShdr247">247</td>
+	<td class="LSdataheader" id="LS-LShdr248">248</td>
+	<td class="LSdataheader" id="LS-LShdr249">249</td>
+	<td class="LSdataheader" id="LS-LShdr250">250</td>
+	<td class="LSdataheader" id="LS-LShdr251">251</td>
+	<td class="LSdataheader" id="LS-LShdr252">252</td>
+	<td class="LSdataheader" id="LS-LShdr253">253</td>
+	<td class="LSdataheader" id="LS-LShdr254">254</td>
+	<td class="LSdataheader" id="LS-LShdr255">255</td>
+	<td class="LSdataheader" id="LS-LShdr256">256</td>
+	<td class="LSdataheader" id="LS-LShdr257">257</td>
+	<td class="LSdataheader" id="LS-LShdr258">258</td>
+	<td class="LSdataheader" id="LS-LShdr259">259</td>
+	<td class="LSdataheader" id="LS-LShdr260">260</td>
+</tr>
+<tr class="LSectiondatarowline">
+	<td class="LSdataline" id="LS-LSlr241">0000</td>
+	<td class="LSdataline" id="LS-LSlr242">0000</td>
+	<td class="LSdataline" id="LS-LSlr243">0000</td>
+	<td class="LSdataline" id="LS-LSlr244">0000</td>
+	<td class="LSdataline" id="LS-LSlr245">0000</td>
+	<td class="LSdataline" id="LS-LSlr246">0000</td>
+	<td class="LSdataline" id="LS-LSlr247">0000</td>
+	<td class="LSdataline" id="LS-LSlr248">0000</td>
+	<td class="LSdataline" id="LS-LSlr249">0000</td>
+	<td class="LSdataline" id="LS-LSlr250">0000</td>
+	<td class="LSdataline" id="LS-LSlr251">0000</td>
+	<td class="LSdataline" id="LS-LSlr252">0000</td>
+	<td class="LSdataline" id="LS-LSlr253">0000</td>
+	<td class="LSdataline" id="LS-LSlr254">0000</td>
+	<td class="LSdataline" id="LS-LSlr255">0000</td>
+	<td class="LSdataline" id="LS-LSlr256">0000</td>
+	<td class="LSdataline" id="LS-LSlr257">0000</td>
+	<td class="LSdataline" id="LS-LSlr258">0000</td>
+	<td class="LSdataline" id="LS-LSlr259">0000</td>
+	<td class="LSdataline" id="LS-LSlr260">0000</td>	
+</tr>
+<tr class="LSectiondatarowheader">
+	<td class="LSdataheader" id="LS-LShdr261">261</td>
+	<td class="LSdataheader" id="LS-LShdr262">262</td>
+	<td class="LSdataheader" id="LS-LShdr263">263</td>
+	<td class="LSdataheader" id="LS-LShdr264">264</td>
+	<td class="LSdataheader" id="LS-LShdr265">265</td>
+	<td class="LSdataheader" id="LS-LShdr266">266</td>
+	<td class="LSdataheader" id="LS-LShdr267">267</td>
+	<td class="LSdataheader" id="LS-LShdr268">268</td>
+	<td class="LSdataheader" id="LS-LShdr269">269</td>
+	<td class="LSdataheader" id="LS-LShdr270">270</td>
+	<td class="LSdataheader" id="LS-LShdr271">271</td>
+	<td class="LSdataheader" id="LS-LShdr272">272</td>
+	<td class="LSdataheader" id="LS-LShdr273">273</td>
+	<td class="LSdataheader" id="LS-LShdr274">274</td>
+	<td class="LSdataheader" id="LS-LShdr275">275</td>
+	<td class="LSdataheader" id="LS-LShdr276">276</td>
+	<td class="LSdataheader" id="LS-LShdr277">277</td>
+	<td class="LSdataheader" id="LS-LShdr278">278</td>
+	<td class="LSdataheader" id="LS-LShdr279">279</td>
+	<td class="LSdataheader" id="LS-LShdr280">280</td>
+</tr>
+<tr class="LSectiondatarowline">
+	<td class="LSdataline" id="LS-LSlr261">0000</td>
+	<td class="LSdataline" id="LS-LSlr262">0000</td>
+	<td class="LSdataline" id="LS-LSlr263">0000</td>
+	<td class="LSdataline" id="LS-LSlr264">0000</td>
+	<td class="LSdataline" id="LS-LSlr265">0000</td>
+	<td class="LSdataline" id="LS-LSlr266">0000</td>
+	<td class="LSdataline" id="LS-LSlr267">0000</td>
+	<td class="LSdataline" id="LS-LSlr268">0000</td>
+	<td class="LSdataline" id="LS-LSlr269">0000</td>
+	<td class="LSdataline" id="LS-LSlr270">0000</td>
+	<td class="LSdataline" id="LS-LSlr271">0000</td>
+	<td class="LSdataline" id="LS-LSlr272">0000</td>
+	<td class="LSdataline" id="LS-LSlr273">0000</td>
+	<td class="LSdataline" id="LS-LSlr274">0000</td>
+	<td class="LSdataline" id="LS-LSlr275">0000</td>
+	<td class="LSdataline" id="LS-LSlr276">0000</td>
+	<td class="LSdataline" id="LS-LSlr277">0000</td>
+	<td class="LSdataline" id="LS-LSlr278">0000</td>
+	<td class="LSdataline" id="LS-LSlr279">0000</td>
+	<td class="LSdataline" id="LS-LSlr280">0000</td>
+</tr>
+</table>
+</div>
+
+
+<div id="Psectionstatus">
+	<h3>Physical Section status</h3>
+<table id="PSectiontable">
+<tr class="PSectiondatarow">
+	<td class="PSdata" id="PS-PS1">1</td>
+	<td class="PSdata"id="PS-PS2">2</td>
+	<td class="PSdata"id="PS-PS3">3</td>
+	<td class="PSdata"id="PS-PS4">4</td>
+	<td class="PSdata"id="PS-PS5">5</td>
+	<td class="PSdata"id="PS-PS6">6</td>
+	<td class="PSdata"id="PS-PS7">7</td>
+	<td class="PSdata"id="PS-PS8">8</td>
+	<td class="PSdata"id="PS-PS9">9</td>
+	<td class="PSdata"id="PS-PS10">10</td>
+	<td class="PSdata"id="PS-PS11">11</td>
+	<td class="PSdata"id="PS-PS12">12</td>
+	<td class="PSdata"id="PS-PS13">13</td>
+	<td class="PSdata"id="PS-PS14">14</td>
+	<td class="PSdata"id="PS-PS15">15</td>
+</tr>
+<tr>
+	<td class="PSdata" id="PS-PS16">16</td>
+	<td class="PSdata" id="PS-PS17">17</td>
+	<td class="PSdata" id="PS-PS18">18</td>
+	<td class="PSdata"id="PS-PS19">19</td>
+	<td class="PSdata"id="PS-PS20">20</td>
+	<td class="PSdata"id="PS-PS21">21</td>
+	<td class="PSdata"id="PS-PS22">22</td>
+	<td class="PSdata"id="PS-PS23">23</td>
+	<td class="PSdata"id="PS-PS24">24</td>
+	<td class="PSdata"id="PS-PS25">25</td>
+	<td class="PSdata"id="PS-PS26">26</td>
+	<td class="PSdata"id="PS-PS27">27</td>
+	<td class="PSdata"id="PS-PS28">28</td>
+	<td class="PSdata"id="PS-PS29">29</td>
+	<td class="PSdata"id="PS-PS30">30</td>
+</tr>
+<tr>
+	<td class="PSdata"id="PS-PS31">31</td>
+	<td class="PSdata"id="PS-PS32">32</td>
+	<td class="PSdata"id="PS-PS33">33</td>
+	<td class="PSdata"id="PS-PS34">34</td>
+	<td class="PSdata"id="PS-PS35">35</td>
+	<td class="PSdata"id="PS-PS36">36</td>
+	<td class="PSdata"id="PS-PS37">37</td>
+	<td class="PSdata"id="PS-PS38">38</td>
+	<td class="PSdata"id="PS-PS39">39</td>
+	<td class="PSdata"id="PS-PS40">40</td>
+	<td class="PSdata"id="PS-PS41">41</td>
+	<td class="PSdata"id="PS-PS42">42</td>
+	<td class="PSdata"id="PS-PS43">43</td>
+	<td class="PSdata"id="PS-PS44">44</td>
+	<td class="PSdata"id="PS-PS45">45</td>
+</tr>
+<tr>
+	<td class="PSdata"id="PS-PS46">46</td>
+	<td class="PSdata"id="PS-PS47">47</td>
+	<td class="PSdata"id="PS-PS48">48</td>
+	<td class="PSdata"id="PS-PS49">49</td>
+	<td class="PSdata"id="PS-PS50">50</td>
+	<td class="PSdata"id="PS-PS51">51</td>
+	<td class="PSdata"id="PS-PS52">52</td>
+	<td class="PSdata"id="PS-PS53">53</td>
+	<td class="PSdata"id="PS-PS54">54</td>
+	<td class="PSdata"id="PS-PS55">55</td>
+	<td class="PSdata"id="PS-PS56">56</td>
+	<td class="PSdata"id="PS-PS57">57</td>
+	<td class="PSdata"id="PS-PS58">58</td>
+	<td class="PSdata"id="PS-PS59">59</td>
+	<td class="PSdata"id="PS-PS60">60</td>
+</tr>
+<tr>
+	<td class="PSdata"id="PS-PS61">61</td>
+	<td class="PSdata"id="PS-PS62">62</td>
+	<td class="PSdata"id="PS-PS63">63</td>
+	<td class="PSdata"id="PS-PS64">64</td>
+	<td class="PSdata"id="PS-PS65">65</td>
+	<td class="PSdata"id="PS-PS66">66</td>
+	<td class="PSdata"id="PS-PS67">67</td>
+	<td class="PSdata"id="PS-PS68">68</td>
+	<td class="PSdata"id="PS-PS69">69</td>
+	<td class="PSdata"id="PS-PS70">70</td>
+	<td class="PSdata"id="PS-PS71">71</td>
+	<td class="PSdata"id="PS-PS72">72</td>
+	<td class="PSdata"id="PS-PS73">73</td>
+	<td class="PSdata"id="PS-PS74">74</td>
+	<td class="PSdata"id="PS-PS75">75</td>
+</tr>
+<tr>
+	<td class="PSdata"id="PS-PS76">76</td>
+	<td class="PSdata"id="PS-PS77">77</td>
+	<td class="PSdata"id="PS-PS78">78</td>
+	<td class="PSdata"id="PS-PS79">79</td>
+	<td class="PSdata"id="PS-PS80">80</td>
+	<td class="PSdata"id="PS-PS81">81</td>
+	<td class="PSdata"id="PS-PS82">82</td>
+	<td class="PSdata"id="PS-PS83">83</td>
+	<td class="PSdata"id="PS-PS84">84</td>
+	<td class="PSdata"id="PS-PS85">85</td>
+	<td class="PSdata"id="PS-PS86">86</td>
+	<td class="PSdata"id="PS-PS87">87</td>
+	<td class="PSdata"id="PS-PS88">88</td>
+	<td class="PSdata"id="PS-PS89">89</td>
+	<td class="PSdata"id="PS-PS90">90</td>
+</tr>
+</table>
+</div>
+
+<div id="ScheduleTitle">
+ <table id="SchedulerBanner">
+			 <thead style="text-align:center; border: 1px solid; ">
+				<tr>				
+				<th colspan="5" style="text-align:center; width:100%; border: 1px solid;"> Scheduler Clock </th>
+				</tr>
+			</thead>
+         <tr id="Schedulertimer">
+            <th> Operation </th>
+            <th> Hour </th>
+            <th> Minute </th>
+            <th> Seconds </th>
+            <th> Sch Ticks </th>    
+         </tr>  
+		 <tr class="Schedclockdetails">
+            <td id='SchedOp'>Stopped</th>
+            <td id='SchedHH'>00</th>
+            <td id='SchedMM'>00</th>
+            <td id='SchedSS'>00</th>
+            <td id='Scheduleticks'>0000</th>       
+		 </tr>
+</table>
+         <div id="Schedbuttongroup"> 
+         <button id="Schedinit" onclick="Schedproc(1)">Start Scheduler</button> 
+         <button id="Schedstop" onclick="Schedproc(0)">Stop Scheduler</button> 
+         <button id="Schedtickset" onclick="Schedproc(2)">Reset tick count</button> 
+         <button id="Schedreset" onclick="Schedproc(3)">Reset Scheduler status</button> 
+         <input type="text" name="schednum" id="Schednmfield" value=00 size="1">
+         </div>
+</div>
+		 
+
+
+<div id="SchedulerTableview">
+ <table id="Schedulertable">
+			 <thead id="SchedTableheader">
+				<tr>				
+				<th colspan="10">Scheduler Monitor</th>
+				</tr>
+			</thead>
+         <tr class="Schedheader">
+            <th>Executor</th>
+            <th>Schedule</th>
+            <th>Step</th>
+            <th>Totalsteps</th>
+            <th>Journey</th>            
+            <th>HH</th>
+            <th>MM</th>
+            <th>SS</th>
+            <th>Ticks</th>
+            <th>Status</th>           
+         </tr>  
+          <tr class="Schedrow">
+            <td id='Execrow1'>0</td>
+            <td id='Schedrow1'>00</td>
+            <td id='Steprow1'>00</td>
+            <td id='TotalstepsinJnyrow1'>00</td>
+            <td id='Journeyrow1'>00</td>            
+            <td id='HHrow1'>00</td>
+            <td id='MMrow1'>00</td>
+            <td id='SSrow1'>00</td>
+            <td id='Ticksrow1'>000</td>
+            <td id='Statusrow1'>inactive</td>           
+         </tr> 
+          <tr class="Schedrow">
+            <td id='Execrow2'>0</td>
+            <td id='Schedrow2'>00</td>
+            <td id='Steprow2'>00</td>
+            <td id='TotalstepsinJnyrow2'>00</td>
+            <td id='Journeyrow2'>00</td>
+            <td id='HHrow2'>00</td>
+            <td id='MMrow2'>00</td>
+            <td id='SSrow2'>00</td>
+            <td id='Ticksrow2'>000</td>
+            <td id='Statusrow2'>inactive</td>           
+         </tr>   
+          <tr class="Schedrow">
+            <td id='Execrow3'>0</td>
+            <td id='Schedrow3'>00</td>
+            <td id='Steprow3'>00</td>
+            <td id='TotalstepsinJnyrow3'>00</td>
+            <td id='Journeyrow3'>00</td>
+            <td id='HHrow3'>00</td>
+            <td id='MMrow3'>00</td>
+            <td id='SSrow3'>00</td>
+            <td id='Ticksrow3'>000</td>
+            <td id='Statusrow3'>inactive</td>           
+         </tr> 
+         <tr class="Schedrow">
+            <td id='Execrow4'>0</td>
+            <td id='Schedrow4'>00</td>
+            <td id='Steprow4'>00</td>
+            <td id='TotalstepsinJnyrow4'>00</td>
+            <td id='Journeyrow4'>00</td>
+            <td id='HHrow4'>00</td>
+            <td id='MMrow4'>00</td>
+            <td id='SSrow4'>00</td>
+            <td id='Ticksrow4'>000</td>
+            <td id='Statusrow4'>inactive</td>           
+         </tr> 
+          <tr class="Schedrow">
+            <td id='Execrow5'>0</td>
+            <td id='Schedrow5'>00</td>
+            <td id='Steprow5'>00</td>
+            <td id='TotalstepsinJnyrow5'>00</td>
+            <td id='Journeyrow5'>00</td>
+            <td id='HHrow5'>00</td>
+            <td id='MMrow5'>00</td>
+            <td id='SSrow5'>00</td>
+            <td id='Ticksrow5'>000</td>
+            <td id='Statusrow5'>inactive</td>           
+         </tr>   
+          <tr class="Schedrow">
+            <td id='Execrow6'>0</td>
+            <td id='Schedrow6'>00</td>
+            <td id='Steprow6'>00</td>
+            <td id='TotalstepsinJnyrow6'>00</td>
+            <td id='Journeyrow6'>00</td>
+            <td id='HHrow6'>00</td>
+            <td id='MMrow6'>00</td>
+            <td id='SSrow6'>00</td>
+            <td id='Ticksrow6'>000</td>
+            <td id='Statusrow6'>inactive</td>           
+         </tr>                                 
+      </table>
+</div>
+
+<div id="Rawdatafeeds">
+<p>
+<div> PI Byte string : </div>
+</p>
+<p> 
+<div id="PIBytestring">
+ No bytes received    
+</div>   
+<p>
+<div> Simulator data feed : </div>
+</p>
+
+<p> 
+<div id="Simdatamsg">
+ No Simulator data received    
+</div>   
+</p>
+<p>
+<div> LocoNet codes : </div>
+</p>
+
+<p> 
+<div id="LNmsg">
+ 00 00 00 00   
+</div>   
+</p>
+
+<p>
+<div id="Pointstatus">
+Points status 
+</div>
+</p>
+
+<p>
+<div id="Pntstatus">
+1-0 2-0 3-0 4-0 5-0
+</div>
+</p>
+
+<p>
+<div id="Ldevicehdr">
+Logical devices
+</div>
+</p>
+<p>
+<div id="Ldevices">
+0 0 0 0 0 0 0 0 
+</div>
+</p>
+
+<p>
+<div id="SectionHexhdr">
+Sections Hex codes 
+</div>
+</p>
+
+<p>
+<div id="SectionsHexcodes">
+00 00 00 00  
+</div>
+</p>
+
+<p>
+<div id="Jmessage">
+.....  
+</div>
+</p>
+
+<p>
+<div id="SourcelineHdr">
+Source data received :  
+</div>
+</p>
+
+<p>
+<div id="Sourceline">
+.....  
+</div>
+</p>
+</div>
+<div style="position:absolute;top:62px; left:1260px; z-index:1">
+      <canvas id="clock" width="200" height="200">
+        Fehlermeldung       
+      </canvas>
+    </div>
+<script src="LNP22scriptNG.js"></script>
+<script src="LNP2023scriptNG.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="LNwebjqueryfunctions.js"></script>
+<script type="text/javascript" src="station-clock.js"></script>
+      <script type="text/javascript">
+
+      var clock = new StationClock("clock");
+      clock.body = StationClock.RoundBody;
+      clock.dial = StationClock.SwissStrokeDial;
+      clock.hourHand = StationClock.SwissHourHand;
+      clock.minuteHand = StationClock.SwissMinuteHand;
+      clock.secondHand = StationClock.SwissSecondHand;
+      clock.boss = StationClock.NoBoss;
+      clock.minuteHandBehavoir = StationClock.BouncingMinuteHand;
+      clock.secondHandBehavoir = StationClock.OverhastySecondHand;
+      console.log("\nLoading clock script");
+
+      animate();
+
+      function animate() {
+        clock.draw();
+        window.setTimeout("animate()", 50);
+      }
+
+    </script>
+
+</body>
+</html>
